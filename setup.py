@@ -20,7 +20,7 @@ setup(
     version='2.13.3.dev0',
     url='http://pypi.python.org/pypi/Products.SiteErrorLog',
     license='ZPL 2.1',
-    description="zope.sendmail integration for Zope 2.",
+    description="error log for Zope 2.",
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     long_description=open('README.txt').read() + '\n' +
