@@ -1,0 +1,9 @@
+*.pyc
+.installed.cfg
+bin/
+bootstrap.py
+develop-eggs/
+include/
+lib/
+local/
+src/Products.SiteErrorLog.egg-info/
