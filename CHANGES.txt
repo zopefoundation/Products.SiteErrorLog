@@ -1,7 +1,7 @@
 2.13.3 (unreleased)
 -------------------
 
-- Nothing changed yet.
+- Add error event
 
 
 2.13.2 (2014-02-10)
