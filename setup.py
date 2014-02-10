@@ -17,7 +17,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Products.SiteErrorLog',
-    version='2.13.2',
+    version='2.13.3.dev0',
     url='http://pypi.python.org/pypi/Products.SiteErrorLog',
     license='ZPL 2.1',
     description="zope.sendmail integration for Zope 2.",
