@@ -1,6 +1,8 @@
 """SiteErrorLog tests
 """
 
+from zope.component import adapter, provideHandler
+from Products.SiteErrorLog.interfaces import IErrorRaisedEvent
 from Testing.makerequest import makerequest
 
 import Zope2
@@ -24,7 +26,7 @@ class SiteErrorLogTests(unittest.TestCase):
                 from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
                 self.app._setObject('error_log', SiteErrorLog())
             self.app.manage_addDTMLMethod('doc', '')
-            
+
             self.logger = logging.getLogger('Zope.SiteErrorLog')
             self.log = logging.handlers.BufferingHandler(sys.maxint)
             self.logger.addHandler(self.log)
@@ -75,6 +77,29 @@ class SiteErrorLogTests(unittest.TestCase):
         # Now look at the SiteErrorLog, it has one more log entry
         self.assertEquals(len(sel_ob.getLogEntries()), previous_log_length+1)
 
+    def testEventSubscription(self):
+        sel_ob = self.app.error_log
+        # Fill the DTML method at self.root.doc with bogus code
+        dmeth = self.app.doc
+        dmeth.manage_upload(file="""<dtml-var expr="1/0">""")
+
+        event_logs = []
+        @adapter(IErrorRaisedEvent)
+        def notifyError(evt):
+            event_logs.append(evt)
+
+        provideHandler(notifyError)
+        # "Faking out" the automatic involvement of the Site Error Log
+        # by manually calling the method "raising" that gets invoked
+        # automatically in a normal web request environment.
+        try:
+            dmeth.__call__()
+        except ZeroDivisionError:
+            sel_ob.raising(sys.exc_info())
+        self.assertEqual(len(event_logs), 1)
+        self.assertEqual(event_logs[0]['type'], 'ZeroDivisionError')
+        self.assertEqual(event_logs[0]['username'], 'Anonymous User')
+
     def testForgetException(self):
         elog = self.app.error_log
 
@@ -122,7 +147,7 @@ class SiteErrorLogTests(unittest.TestCase):
         except ZeroDivisionError:
             sel_ob.raising(sys.exc_info())
 
-        # Now look at the SiteErrorLog, it must have the same number of 
+        # Now look at the SiteErrorLog, it must have the same number of
         # log entries
         self.assertEquals(len(sel_ob.getLogEntries()), previous_log_length)
 
@@ -139,7 +164,7 @@ class SiteErrorLogTests(unittest.TestCase):
         entries = elog.getLogEntries()
         entry_id = entries[0]['id']
 
-        self.assertTrue(entry_id in self.log.buffer[-1].msg, 
+        self.assertTrue(entry_id in self.log.buffer[-1].msg,
                         (entry_id, self.log.buffer[-1].msg))
 
     def testCleanup(self):

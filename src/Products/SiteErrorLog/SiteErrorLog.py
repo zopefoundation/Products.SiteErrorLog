@@ -20,6 +20,8 @@ import time
 import logging
 from random import random
 from thread import allocate_lock
+from zope.event import notify
+from Products.SiteErrorLog.interfaces import ErrorRaisedEvent
 
 try:
     from AccessControl.class_init import InitializeClass
@@ -217,6 +219,7 @@ class SiteErrorLog (SimpleItem):
             except:
                 LOG.error('Error while logging', exc_info=sys.exc_info())
             else:
+                notify(ErrorRaisedEvent(log[-1]))
                 if self.copy_to_zlog:
                     self._do_copy_to_zlog(now,strtype,entry_id,str(url),tb_text)
                 return '%s/showEntry?id=%s' % (self.absolute_url(), entry_id)
