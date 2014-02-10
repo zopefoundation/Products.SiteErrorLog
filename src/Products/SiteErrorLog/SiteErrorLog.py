@@ -21,7 +21,11 @@ import logging
 from random import random
 from thread import allocate_lock
 
-from AccessControl.class_init import InitializeClass
+try:
+    from AccessControl.class_init import InitializeClass
+except:
+    from Globals import InitializeClass
+
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.unauthorized import Unauthorized

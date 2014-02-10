@@ -29,13 +29,13 @@ setup(
     namespace_packages=['Products'],
     package_dir={'': 'src'},
     extras_require=dict(
-        test=['transaction']),
+        test=['transaction'],
+        zope212=['AccessControl',
+                 'DocumentTemplate',
+                 'Zope2']),
     install_requires=[
         'setuptools',
-        'AccessControl',
         'Acquisition',
-        'DocumentTemplate',
-        'Zope2 >= 2.13.0a1',
     ],
     include_package_data=True,
     zip_safe=False,
