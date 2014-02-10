@@ -1,4 +1,4 @@
-2.13.0 (unreleased)
+2.13.2 (2014-02-10)
 -------------------
 
 - Release as a separated package (previously in Zope2)
