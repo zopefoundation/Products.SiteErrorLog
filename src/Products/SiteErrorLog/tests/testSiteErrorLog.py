@@ -75,7 +75,7 @@ class SiteErrorLogTests(unittest.TestCase):
             sel_ob.raising(sys.exc_info())
 
         # Now look at the SiteErrorLog, it has one more log entry
-        self.assertEquals(len(sel_ob.getLogEntries()), previous_log_length+1)
+        self.assertEquals(len(sel_ob.getLogEntries()), previous_log_length + 1)
 
     def testEventSubscription(self):
         sel_ob = self.app.error_log
@@ -84,6 +84,7 @@ class SiteErrorLogTests(unittest.TestCase):
         dmeth.manage_upload(file="""<dtml-var expr="1/0">""")
 
         event_logs = []
+
         @adapter(IErrorRaisedEvent)
         def notifyError(evt):
             event_logs.append(evt)
@@ -103,10 +104,9 @@ class SiteErrorLogTests(unittest.TestCase):
     def testForgetException(self):
         elog = self.app.error_log
 
-
         # Create a predictable error
         try:
-            raise AttributeError, "DummyAttribute"
+            raise AttributeError("DummyAttribute")
         except AttributeError:
             info = sys.exc_info()
             elog.raising(info)
@@ -119,7 +119,7 @@ class SiteErrorLogTests(unittest.TestCase):
         elog.forgetEntry(entries[0]['id'])
 
         # Really gone?
-        self.assertEquals(len(elog.getLogEntries()), previous_log_length-1)
+        self.assertEquals(len(elog.getLogEntries()), previous_log_length - 1)
 
     def testIgnoredException(self):
         # Grab the Site Error Log
@@ -130,10 +130,9 @@ class SiteErrorLogTests(unittest.TestCase):
         current_props = sel_ob.getProperties()
         ignored = list(current_props['ignored_exceptions'])
         ignored.append('ZeroDivisionError')
-        sel_ob.setProperties( current_props['keep_entries']
-                            , copy_to_zlog = current_props['copy_to_zlog']
-                            , ignored_exceptions = ignored
-                            )
+        sel_ob.setProperties(current_props['keep_entries'],
+                             copy_to_zlog=current_props['copy_to_zlog'],
+                             ignored_exceptions=ignored)
 
         # Fill the DTML method at self.root.doc with bogus code
         dmeth = self.app.doc
@@ -156,7 +155,7 @@ class SiteErrorLogTests(unittest.TestCase):
 
         # Create a predictable error
         try:
-            raise AttributeError, "DummyAttribute"
+            raise AttributeError("DummyAttribute")
         except AttributeError:
             info = sys.exc_info()
             elog.raising(info)

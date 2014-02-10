@@ -25,7 +25,8 @@ from Products.SiteErrorLog.interfaces import ErrorRaisedEvent
 
 try:
     from AccessControl.class_init import InitializeClass
-except:
+    InitializeClass  # pyflakes
+except ImportError, e:
     from Globals import InitializeClass
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
@@ -83,8 +84,7 @@ class SiteErrorLog (SimpleItem):
     security = ClassSecurityInfo()
 
     manage_options = (
-        {'label': 'Log', 'action': 'manage_main'},
-        ) + SimpleItem.manage_options
+        {'label': 'Log', 'action': 'manage_main'}, ) + SimpleItem.manage_options
 
     security.declareProtected(use_error_logging, 'manage_main')
     manage_main = PageTemplateFile('main.pt', _www)
@@ -93,6 +93,7 @@ class SiteErrorLog (SimpleItem):
     showEntry = PageTemplateFile('showEntry.pt', _www)
 
     security.declarePrivate('manage_beforeDelete')
+
     def manage_beforeDelete(self, item, container):
         if item is self:
             try:
@@ -101,6 +102,7 @@ class SiteErrorLog (SimpleItem):
                 pass
 
     security.declarePrivate('manage_afterAdd')
+
     def manage_afterAdd(self, item, container):
         if item is self:
             container.__error_log__ = aq_base(self)
@@ -124,11 +126,12 @@ class SiteErrorLog (SimpleItem):
         return log
 
     security.declareProtected(use_error_logging, 'forgetEntry')
+
     def forgetEntry(self, id, REQUEST=None):
         """Removes an entry from the error log."""
         log = self._getLog()
         cleanup_lock.acquire()
-        i=0
+        i = 0
         for entry in log:
             if entry['id'] == id:
                 del log[i]
@@ -142,9 +145,10 @@ class SiteErrorLog (SimpleItem):
     # Exceptions that happen all the time, so we dont need
     # to log them. Eventually this should be configured
     # through-the-web.
-    _ignored_exceptions = ( 'Unauthorized', 'NotFound', 'Redirect' )
+    _ignored_exceptions = ('Unauthorized', 'NotFound', 'Redirect')
 
     security.declarePrivate('raising')
+
     def raising(self, info):
         """Log an exception.
 
@@ -172,7 +176,7 @@ class SiteErrorLog (SimpleItem):
                 request = getattr(self, 'REQUEST', None)
                 url = None
                 username = None
-                userid   = None
+                userid = None
                 req_html = None
                 try:
                     strv = str(info[1])
@@ -196,7 +200,7 @@ class SiteErrorLog (SimpleItem):
                             strv = '%s [ /%s ]' % (strv, '/'.join(next))
 
                 log = self._getLog()
-                entry_id = str(now) + str(random()) # Low chance of collision
+                entry_id = str(now) + str(random())  # Low chance of collision
                 log.append({
                     'type': strtype,
                     'value': strv,
@@ -207,8 +211,7 @@ class SiteErrorLog (SimpleItem):
                     'username': username,
                     'userid': userid,
                     'url': url,
-                    'req_html': req_html,
-                    })
+                    'req_html': req_html})
 
                 cleanup_lock.acquire()
                 try:
@@ -221,35 +224,38 @@ class SiteErrorLog (SimpleItem):
             else:
                 notify(ErrorRaisedEvent(log[-1]))
                 if self.copy_to_zlog:
-                    self._do_copy_to_zlog(now,strtype,entry_id,str(url),tb_text)
+                    self._do_copy_to_zlog(now, strtype, entry_id,
+                                          str(url), tb_text)
                 return '%s/showEntry?id=%s' % (self.absolute_url(), entry_id)
         finally:
             info = None
 
-    def _do_copy_to_zlog(self,now,strtype,entry_id,url,tb_text):
-        when = _rate_restrict_pool.get(strtype,0)
-        if now>when:
-            next_when = max(when, now-_rate_restrict_burst*_rate_restrict_period)
+    def _do_copy_to_zlog(self, now, strtype, entry_id, url, tb_text):
+        when = _rate_restrict_pool.get(strtype, 0)
+        if now > when:
+            next_when = max(when, now - _rate_restrict_burst * _rate_restrict_period)
             next_when += _rate_restrict_period
             _rate_restrict_pool[strtype] = next_when
             LOG.error('%s %s\n%s' % (entry_id, url, tb_text.rstrip()))
 
     security.declareProtected(use_error_logging, 'getProperties')
+
     def getProperties(self):
         return {
             'keep_entries': self.keep_entries,
             'copy_to_zlog': self.copy_to_zlog,
-            'ignored_exceptions': self._ignored_exceptions,
-            }
+            'ignored_exceptions': self._ignored_exceptions}
 
     security.declareProtected(log_to_event_log, 'checkEventLogPermission')
+
     def checkEventLogPermission(self):
         if not getSecurityManager().checkPermission(log_to_event_log, self):
-            raise Unauthorized, ('You do not have the "%s" permission.' %
-                                 log_to_event_log)
+            raise Unauthorized('You do not have the "%s" permission.' %
+                               log_to_event_log)
         return 1
 
     security.declareProtected(use_error_logging, 'setProperties')
+
     def setProperties(self, keep_entries, copy_to_zlog=0,
                       ignored_exceptions=(), RESPONSE=None):
         """Sets the properties of this site error log.
@@ -268,6 +274,7 @@ class SiteErrorLog (SimpleItem):
                 self.absolute_url())
 
     security.declareProtected(use_error_logging, 'getLogEntries')
+
     def getLogEntries(self):
         """Returns the entries in the log, most recent first.
 
@@ -279,6 +286,7 @@ class SiteErrorLog (SimpleItem):
         return res
 
     security.declareProtected(use_error_logging, 'getLogEntryById')
+
     def getLogEntryById(self, id):
         """Returns the specified log entry.
 
@@ -290,6 +298,7 @@ class SiteErrorLog (SimpleItem):
         return None
 
     security.declareProtected(use_error_logging, 'getLogEntryAsText')
+
     def getLogEntryAsText(self, id, RESPONSE=None):
         """Returns the specified log entry.
 
@@ -312,4 +321,4 @@ def manage_addErrorLog(dispatcher, RESPONSE=None):
     if RESPONSE is not None:
         RESPONSE.redirect(
             dispatcher.DestinationURL() +
-            '/manage_main?manage_tabs_message=Error+Log+Added.' )
+            '/manage_main?manage_tabs_message=Error+Log+Added.')
