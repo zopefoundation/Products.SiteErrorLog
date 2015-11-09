@@ -28,7 +28,7 @@ class SiteErrorLogTests(unittest.TestCase):
             self.app.manage_addDTMLMethod('doc', '')
 
             self.logger = logging.getLogger('Zope.SiteErrorLog')
-            self.log = logging.handlers.BufferingHandler(sys.maxint)
+            self.log = logging.handlers.BufferingHandler(sys.maxsize)
             self.logger.addHandler(self.log)
             self.old_level = self.logger.level
             self.logger.setLevel(logging.ERROR)
@@ -46,16 +46,16 @@ class SiteErrorLogTests(unittest.TestCase):
         sel_ob = getattr(self.app, 'error_log', None)
 
         # Does the error log exist?
-        self.assert_(sel_ob is not None)
+        self.assertTrue(sel_ob is not None)
 
         # Is the __error_log__ hook in place?
-        self.assert_(self.app.__error_log__ == sel_ob)
+        self.assertEqual(self.app.__error_log__, sel_ob)
 
         # Right now there should not be any entries in the log
         # but if another test fails and leaves something in the
         # log (which belongs to app , we get a spurious error here.
         # There's no real point in testing this anyway.
-        #self.assertEquals(len(sel_ob.getLogEntries()), 0)
+        #self.assertEqual(len(sel_ob.getLogEntries()), 0)
 
     def testSimpleException(self):
         # Grab the Site Error Log and make sure it's empty
@@ -75,7 +75,7 @@ class SiteErrorLogTests(unittest.TestCase):
             sel_ob.raising(sys.exc_info())
 
         # Now look at the SiteErrorLog, it has one more log entry
-        self.assertEquals(len(sel_ob.getLogEntries()), previous_log_length + 1)
+        self.assertEqual(len(sel_ob.getLogEntries()), previous_log_length + 1)
 
     def testEventSubscription(self):
         sel_ob = self.app.error_log
@@ -113,13 +113,13 @@ class SiteErrorLogTests(unittest.TestCase):
         previous_log_length = len(elog.getLogEntries())
 
         entries = elog.getLogEntries()
-        self.assertEquals(entries[0]['value'], "DummyAttribute")
+        self.assertEqual(entries[0]['value'], "DummyAttribute")
 
         # Kick it
         elog.forgetEntry(entries[0]['id'])
 
         # Really gone?
-        self.assertEquals(len(elog.getLogEntries()), previous_log_length - 1)
+        self.assertEqual(len(elog.getLogEntries()), previous_log_length - 1)
 
     def testIgnoredException(self):
         # Grab the Site Error Log
@@ -148,7 +148,7 @@ class SiteErrorLogTests(unittest.TestCase):
 
         # Now look at the SiteErrorLog, it must have the same number of
         # log entries
-        self.assertEquals(len(sel_ob.getLogEntries()), previous_log_length)
+        self.assertEqual(len(sel_ob.getLogEntries()), previous_log_length)
 
     def testEntryID(self):
         elog = self.app.error_log
@@ -169,7 +169,7 @@ class SiteErrorLogTests(unittest.TestCase):
     def testCleanup(self):
         # Need to make sure that the __error_log__ hook gets cleaned up
         self.app._delObject('error_log')
-        self.assertEquals(getattr(self.app, '__error_log__', None), None)
+        self.assertEqual(getattr(self.app, '__error_log__', None), None)
 
 
 def test_suite():

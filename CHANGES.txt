@@ -3,6 +3,8 @@
 
 - Add error event
 
+- Python 3 compatibility
+
 
 2.13.2 (2014-02-10)
 -------------------
