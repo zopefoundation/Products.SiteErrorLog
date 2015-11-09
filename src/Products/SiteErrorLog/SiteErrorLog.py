@@ -73,7 +73,7 @@ cleanup_lock = allocate_lock()
 
 try:
    # Python 2
-   bstr = basetring
+   bstr = basestring
 except NameError:
    # Python 3
    bstr = str
