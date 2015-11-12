@@ -23,7 +23,7 @@ setup(
     description="error log for Zope 2.",
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
-    long_description=open('README.txt').read() + '\n' +
+    long_description=open('README.rst').read() + '\n' +
     open('CHANGES.txt').read(),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
@@ -33,8 +33,6 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 2.6",
         "Programming Language :: Python :: 2.7",
-        "Programming Language :: Python :: 3.4",
-        "Programming Language :: Python :: 3.5",
         "Framework :: Zope2",
         "Topic :: Software Development :: Libraries :: Python Modules",
         ],
