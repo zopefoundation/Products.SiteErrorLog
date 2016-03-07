@@ -19,15 +19,16 @@ import sys
 import time
 import logging
 from random import random
-from thread import allocate_lock
+try:
+    # Python 3
+    from _thread import allocate_lock
+except ImportError:
+    # Python 2
+    from thread import allocate_lock
 from zope.event import notify
 from Products.SiteErrorLog.interfaces import ErrorRaisedEvent
 
-try:
-    from AccessControl.class_init import InitializeClass
-    InitializeClass  # pyflakes
-except ImportError, e:
-    from Globals import InitializeClass
+from AccessControl.class_init import InitializeClass
 
 from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
@@ -70,6 +71,12 @@ temp_logs = {}  # { oid -> [ traceback string ] }
 
 cleanup_lock = allocate_lock()
 
+try:
+   # Python 2
+   bstr = basestring
+except NameError:
+   # Python 3
+   bstr = str
 
 class SiteErrorLog (SimpleItem):
     """Site error log class.  You can put an error log anywhere in the tree
@@ -165,7 +172,7 @@ class SiteErrorLog (SimpleItem):
                 if strtype in self._ignored_exceptions:
                     return
 
-                if not isinstance(info[2], basestring):
+                if not isinstance(info[2], bstr):
                     tb_text = ''.join(
                         format_exception(*info, **{'as_html': 0}))
                     tb_html = ''.join(
@@ -267,7 +274,7 @@ class SiteErrorLog (SimpleItem):
         self.keep_entries = int(keep_entries)
         self.copy_to_zlog = copy_to_zlog
         self._ignored_exceptions = tuple(
-            filter(None, map(str, ignored_exceptions)))
+            [_f for _f in map(str, ignored_exceptions) if _f])
         if RESPONSE is not None:
             RESPONSE.redirect(
                 '%s/manage_main?manage_tabs_message=Changed+properties.' %
