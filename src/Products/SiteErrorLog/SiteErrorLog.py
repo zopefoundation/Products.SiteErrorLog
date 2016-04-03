@@ -72,13 +72,14 @@ temp_logs = {}  # { oid -> [ traceback string ] }
 cleanup_lock = allocate_lock()
 
 try:
-   # Python 2
-   bstr = basestring
+    # Python 2
+    bstr = basestring
 except NameError:
-   # Python 3
-   bstr = str
+    # Python 3
+    bstr = str
 
-class SiteErrorLog (SimpleItem):
+
+class SiteErrorLog(SimpleItem):
     """Site error log class.  You can put an error log anywhere in the tree
     and exceptions in that area will be posted to the site error log.
     """
