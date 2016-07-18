@@ -1,18 +1,29 @@
-"""SiteErrorLog tests
-"""
+##############################################################################
+#
+# Copyright (c) 2001, 2002 Zope Foundation and Contributors.
+# All Rights Reserved.
+#
+# This software is subject to the provisions of the Zope Public License,
+# Version 2.1 (ZPL).  A copy of the ZPL should accompany this distribution.
+# THIS SOFTWARE IS PROVIDED "AS IS" AND ANY AND ALL EXPRESS OR IMPLIED
+# WARRANTIES ARE DISCLAIMED, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED
+# WARRANTIES OF TITLE, MERCHANTABILITY, AGAINST INFRINGEMENT, AND FITNESS
+# FOR A PARTICULAR PURPOSE.
+#
+##############################################################################
 
-from zope.component import adapter, provideHandler
-from Products.SiteErrorLog.interfaces import IErrorRaisedEvent
-from Testing.makerequest import makerequest
-
-import Zope2
-Zope2.startup()
-
-import transaction
-
+import logging
 import sys
 import unittest
-import logging
+
+import transaction
+from Testing.makerequest import makerequest
+from zope.component import adapter, provideHandler
+import Zope2
+
+from Products.SiteErrorLog.interfaces import IErrorRaisedEvent
+
+Zope2.startup()
 
 
 class SiteErrorLogTests(unittest.TestCase):
@@ -50,12 +61,6 @@ class SiteErrorLogTests(unittest.TestCase):
 
         # Is the __error_log__ hook in place?
         self.assertEqual(self.app.__error_log__, sel_ob)
-
-        # Right now there should not be any entries in the log
-        # but if another test fails and leaves something in the
-        # log (which belongs to app , we get a spurious error here.
-        # There's no real point in testing this anyway.
-        #self.assertEqual(len(sel_ob.getLogEntries()), 0)
 
     def testSimpleException(self):
         # Grab the Site Error Log and make sure it's empty
@@ -170,9 +175,3 @@ class SiteErrorLogTests(unittest.TestCase):
         # Need to make sure that the __error_log__ hook gets cleaned up
         self.app._delObject('error_log')
         self.assertEqual(getattr(self.app, '__error_log__', None), None)
-
-
-def test_suite():
-    suite = unittest.TestSuite()
-    suite.addTest(unittest.makeSuite(SiteErrorLogTests))
-    return suite

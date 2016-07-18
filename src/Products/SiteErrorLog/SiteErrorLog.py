@@ -92,7 +92,8 @@ class SiteErrorLog(SimpleItem):
     security = ClassSecurityInfo()
 
     manage_options = (
-        {'label': 'Log', 'action': 'manage_main'}, ) + SimpleItem.manage_options
+        {'label': 'Log', 'action': 'manage_main'},
+    ) + SimpleItem.manage_options
 
     security.declareProtected(use_error_logging, 'manage_main')
     manage_main = PageTemplateFile('main.pt', _www)
@@ -147,7 +148,8 @@ class SiteErrorLog(SimpleItem):
         cleanup_lock.release()
         if REQUEST is not None:
             REQUEST.RESPONSE.redirect(
-                '%s/manage_main?manage_tabs_message=Error+log+entry+was+removed.' %
+                '%s/manage_main?manage_tabs_message='
+                'Error+log+entry+was+removed.' %
                 self.absolute_url())
 
     # Exceptions that happen all the time, so we dont need
@@ -241,7 +243,8 @@ class SiteErrorLog(SimpleItem):
     def _do_copy_to_zlog(self, now, strtype, entry_id, url, tb_text):
         when = _rate_restrict_pool.get(strtype, 0)
         if now > when:
-            next_when = max(when, now - _rate_restrict_burst * _rate_restrict_period)
+            next_when = max(when,
+                            now - _rate_restrict_burst * _rate_restrict_period)
             next_when += _rate_restrict_period
             _rate_restrict_pool[strtype] = next_when
             LOG.error('%s %s\n%s' % (entry_id, url, tb_text.rstrip()))
