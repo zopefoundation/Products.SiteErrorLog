@@ -1,7 +1,7 @@
 Changelog
 =========
 
-3.0 (unreleased)
+3.0 (2016-07-19)
 ----------------
 
 - Drop `test` and `zope212` setuptools extras.

@@ -17,7 +17,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Products.SiteErrorLog',
-    version='3.0.dev0',
+    version='3.0',
     url='http://pypi.python.org/pypi/Products.SiteErrorLog',
     license='ZPL 2.1',
     description="Error log for Zope 2.",
