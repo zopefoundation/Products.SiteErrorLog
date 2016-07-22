@@ -1,9 +1,10 @@
 Changelog
 =========
 
-3.0.1 (unreleased)
-------------------
+4.0 (unreleased)
+----------------
 
+- Add configure.zcml with deprecatedManageAddDelete directive.
 
 3.0 (2016-07-19)
 ----------------

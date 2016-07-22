@@ -17,7 +17,7 @@ from setuptools import setup, find_packages
 
 setup(
     name='Products.SiteErrorLog',
-    version='3.0.1.dev0',
+    version='4.0.dev0',
     url='http://pypi.python.org/pypi/Products.SiteErrorLog',
     license='ZPL 2.1',
     description="Error log for Zope 2.",
@@ -44,7 +44,7 @@ setup(
         'Acquisition',
         'transaction',
         'zExceptions',
-        'Zope2',
+        'Zope2 >= 4.0.dev0',
         'zope.component',
         'zope.interface',
         'zope.event',
