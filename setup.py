@@ -45,6 +45,7 @@ setup(
         'transaction',
         'zExceptions',
         'Zope2 >= 4.0.dev0',
+        'ZServer',
         'zope.component',
         'zope.interface',
         'zope.event',
