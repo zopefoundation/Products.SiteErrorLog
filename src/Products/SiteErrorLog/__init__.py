@@ -12,7 +12,7 @@
 #
 ##############################################################################
 
-import SiteErrorLog
+from . import SiteErrorLog
 
 
 def initialize(context):

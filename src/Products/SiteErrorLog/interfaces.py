@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from zope.interface import Interface, implements
+from zope.interface import implementer
+from zope.interface import Interface
 
 
 class IErrorRaisedEvent(Interface):
@@ -8,5 +9,6 @@ class IErrorRaisedEvent(Interface):
     """
 
 
+@implementer(IErrorRaisedEvent)
 class ErrorRaisedEvent(dict):
-    implements(IErrorRaisedEvent)
+    pass
