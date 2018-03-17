@@ -15,6 +15,27 @@
 
 from setuptools import setup, find_packages
 
+import sys
+
+INSTALL_REQUIRES = [
+    'setuptools',
+    'AccessControl',
+    'Acquisition',
+    'transaction',
+    'zExceptions',
+    'Zope2 >= 4.0.dev0',
+    'zope.component',
+    'zope.interface',
+    'zope.event',
+]
+
+PY2_ONLY = [
+    'ZServer',
+]
+
+if sys.version_info[0] == 2:
+    INSTALL_REQUIRES += PY2_ONLY
+
 setup(
     name='Products.SiteErrorLog',
     version='5.0.dev0',
@@ -38,18 +59,7 @@ setup(
     packages=find_packages('src'),
     namespace_packages=['Products'],
     package_dir={'': 'src'},
-    install_requires=[
-        'setuptools',
-        'AccessControl',
-        'Acquisition',
-        'transaction',
-        'zExceptions',
-        'Zope2 >= 4.0.dev0',
-        'ZServer',
-        'zope.component',
-        'zope.interface',
-        'zope.event',
-    ],
+    install_requires=INSTALL_REQUIRES,
     include_package_data=True,
     zip_safe=False,
 )
