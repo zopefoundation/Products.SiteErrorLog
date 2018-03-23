@@ -1,8 +1,13 @@
 *.pyc
+.coverage
+.coverage.*
 .installed.cfg
+.tox/
 bin/
+coverage.xml
 develop-eggs/
 dist/
+htmlcov/
 include/
 lib/
 local/

@@ -5,10 +5,13 @@ python:
 install:
     - pip install -U setuptools
     - pip install zc.buildout
+    - pip install coveralls coverage
     - buildout bootstrap
     - buildout
 script:
-    - bin/test -v1
+    - coverage run bin/test --all -v
+after_success:
+    - coveralls
 notifications:
     email: false
 cache:
