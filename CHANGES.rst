@@ -1,9 +1,10 @@
 Changelog
 =========
 
-4.1 (unreleased)
+5.0 (unreleased)
 ----------------
 
+- Drop support for Zope 2, require Zope 4 now.
 
 4.0 (2016-07-22)
 ----------------

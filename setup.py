@@ -17,10 +17,10 @@ from setuptools import setup, find_packages
 
 setup(
     name='Products.SiteErrorLog',
-    version='4.1.dev0',
-    url='http://pypi.python.org/pypi/Products.SiteErrorLog',
+    version='5.0.dev0',
+    url='https://github.com/zopefoundation/Products.SiteErrorLog',
     license='ZPL 2.1',
-    description="Error log for Zope 2.",
+    description="Error log for Zope.",
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
     long_description=(open('README.rst').read() + '\n' +
@@ -33,7 +33,7 @@ setup(
         "Programming Language :: Python",
         "Programming Language :: Python :: 2 :: Only",
         "Programming Language :: Python :: 2.7",
-        "Framework :: Zope2",
+        "Framework :: Zope :: 4",
     ],
     packages=find_packages('src'),
     namespace_packages=['Products'],
