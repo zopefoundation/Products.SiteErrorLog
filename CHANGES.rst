@@ -6,6 +6,9 @@ Changelog
 
 - Drop support for Zope 2, require Zope 4 now.
 
+- Drop `ZServer` dependency.
+
+
 4.0 (2016-07-22)
 ----------------
 

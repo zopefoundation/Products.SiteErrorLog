@@ -15,8 +15,6 @@
 
 from setuptools import setup, find_packages
 
-import sys
-
 INSTALL_REQUIRES = [
     'setuptools',
     'AccessControl',
@@ -29,12 +27,6 @@ INSTALL_REQUIRES = [
     'zope.event',
 ]
 
-PY2_ONLY = [
-    'ZServer',
-]
-
-if sys.version_info[0] == 2:
-    INSTALL_REQUIRES += PY2_ONLY
 
 setup(
     name='Products.SiteErrorLog',
