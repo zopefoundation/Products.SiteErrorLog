@@ -4,4 +4,6 @@
   <five:deprecatedManageAddDelete
       class="Products.SiteErrorLog.SiteErrorLog.SiteErrorLog"/>
 
+  <subscriber handler=".SiteErrorLog.IPubFailureSubscriber" />
+
 </configure>
