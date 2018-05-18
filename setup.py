@@ -21,7 +21,7 @@ INSTALL_REQUIRES = [
     'Acquisition',
     'transaction',
     'zExceptions',
-    'Zope2 >= 4.0.dev0',
+    'Zope >= 4.0b5',
     'zope.component',
     'zope.interface',
     'zope.event',

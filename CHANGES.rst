@@ -4,11 +4,14 @@ Changelog
 5.0 (unreleased)
 ----------------
 
-- Drop support for Zope 2, require Zope 4 now.
+- Drop support for Zope 2, require Zope 4.0b5 now.
 
 - Drop `ZServer` dependency.
 
 - Add IPubFailure event handler so it writes error log entries again.
+
+- Bring back Application initialization (creation of SiteErrorLog in the
+  ZODB on first startup).
 
 
 4.0 (2016-07-22)
