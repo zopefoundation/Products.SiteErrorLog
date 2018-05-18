@@ -19,6 +19,8 @@ import unittest
 import transaction
 from Testing.makerequest import makerequest
 from zope.component import adapter, provideHandler
+from zope.event import notify
+from ZPublisher.pubevents import PubFailure
 import Zope2
 
 from Products.SiteErrorLog.interfaces import IErrorRaisedEvent
@@ -70,13 +72,13 @@ class SiteErrorLogTests(unittest.TestCase):
         dmeth = self.app.doc
         dmeth.manage_upload(file="""<dtml-var expr="1/0">""")
 
-        # "Faking out" the automatic involvement of the Site Error Log
-        # by manually calling the method "raising" that gets invoked
-        # automatically in a normal web request environment.
+        # Faking the behavior of the WSGIPublisher (object acquisition,
+        # view calling and failure notification on exception).
         try:
             dmeth.__call__()
         except ZeroDivisionError:
-            sel_ob.raising(sys.exc_info())
+            self.app.REQUEST['PUBLISHED'] = dmeth
+            notify(PubFailure(self.app.REQUEST, sys.exc_info(), False))
 
         # Now look at the SiteErrorLog, it has one more log entry
         self.assertEqual(len(sel_ob.getLogEntries()), previous_log_length + 1)
@@ -94,13 +96,14 @@ class SiteErrorLogTests(unittest.TestCase):
             event_logs.append(evt)
 
         provideHandler(notifyError)
-        # "Faking out" the automatic involvement of the Site Error Log
-        # by manually calling the method "raising" that gets invoked
-        # automatically in a normal web request environment.
+        # Faking the behavior of the WSGIPublisher (object acquisition,
+        # view calling and failure notification on exception).
         try:
             dmeth.__call__()
         except ZeroDivisionError:
-            sel_ob.raising(sys.exc_info())
+            self.app.REQUEST['PUBLISHED'] = dmeth
+            notify(PubFailure(self.app.REQUEST, sys.exc_info(), False))
+
         self.assertEqual(len(event_logs), 1)
         self.assertEqual(event_logs[0]['type'], 'ZeroDivisionError')
         self.assertEqual(event_logs[0]['username'], 'Anonymous User')
@@ -112,8 +115,9 @@ class SiteErrorLogTests(unittest.TestCase):
         try:
             raise AttributeError("DummyAttribute")
         except AttributeError:
-            info = sys.exc_info()
-            elog.raising(info)
+            self.app.REQUEST['PUBLISHED'] = elog
+            notify(PubFailure(self.app.REQUEST, sys.exc_info(), False))
+
         previous_log_length = len(elog.getLogEntries())
 
         entries = elog.getLogEntries()
@@ -142,13 +146,13 @@ class SiteErrorLogTests(unittest.TestCase):
         dmeth = self.app.doc
         dmeth.manage_upload(file="""<dtml-var expr="1/0">""")
 
-        # "Faking out" the automatic involvement of the Site Error Log
-        # by manually calling the method "raising" that gets invoked
-        # automatically in a normal web request environment.
+        # Faking the behavior of the WSGIPublisher (object acquisition,
+        # view calling and failure notification on exception).
         try:
             dmeth.__call__()
         except ZeroDivisionError:
-            sel_ob.raising(sys.exc_info())
+            self.app.REQUEST['PUBLISHED'] = dmeth
+            notify(PubFailure(self.app.REQUEST, sys.exc_info(), False))
 
         # Now look at the SiteErrorLog, it must have the same number of
         # log entries
@@ -161,8 +165,8 @@ class SiteErrorLogTests(unittest.TestCase):
         try:
             raise AttributeError("DummyAttribute")
         except AttributeError:
-            info = sys.exc_info()
-            elog.raising(info)
+            self.app.REQUEST['PUBLISHED'] = elog
+            notify(PubFailure(self.app.REQUEST, sys.exc_info(), False))
 
         entries = elog.getLogEntries()
         entry_id = entries[0]['id']
