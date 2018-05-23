@@ -23,12 +23,11 @@ import Zope2
 
 from Products.SiteErrorLog.interfaces import IErrorRaisedEvent
 
-Zope2.startup()
-
 
 class SiteErrorLogTests(unittest.TestCase):
 
     def setUp(self):
+        Zope2.startup_wsgi()
         transaction.begin()
         self.app = makerequest(Zope2.app())
         try:
