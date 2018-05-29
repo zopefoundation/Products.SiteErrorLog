@@ -8,6 +8,8 @@ Changelog
 
 - Drop `ZServer` dependency.
 
+- Add IPubFailure event handler so it writes error log entries again.
+
 
 4.0 (2016-07-22)
 ----------------

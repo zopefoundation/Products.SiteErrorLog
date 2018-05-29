@@ -26,6 +26,7 @@ except ImportError:
     # Python 2
     from thread import allocate_lock
 from zope.event import notify
+from zope.component import adapter
 from .interfaces import ErrorRaisedEvent
 
 from AccessControl.class_init import InitializeClass
@@ -33,10 +34,12 @@ from AccessControl.SecurityInfo import ClassSecurityInfo
 from AccessControl.SecurityManagement import getSecurityManager
 from AccessControl.unauthorized import Unauthorized
 from Acquisition import aq_base
+from Acquisition import aq_acquire
 from App.Dialogs import MessageDialog
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from zExceptions.ExceptionFormatter import format_exception
+from ZPublisher.interfaces import IPubFailure
 
 LOG = logging.getLogger('Zope.SiteErrorLog')
 
@@ -329,3 +332,21 @@ def manage_addErrorLog(dispatcher, RESPONSE=None):
         RESPONSE.redirect(
             dispatcher.DestinationURL() +
             '/manage_main?manage_tabs_message=Error+Log+Added.')
+
+@adapter(IPubFailure)
+def IPubFailureSubscriber(event):
+    """ Handles an IPubFailure event triggered by the WSGI Publisher.
+        This handler forwards the event to the SiteErrorLog object
+        closest to the published object that the error occured with,
+        it logs no error if no published object was found.
+    """
+    published = event.request.get('PUBLISHED')
+    if not published:
+        return
+
+    try:
+        error_log = aq_acquire(published, '__error_log__', containment=1)
+    except AttributeError:
+        pass
+    else:
+        error_log.raising(event.exc_info)
