@@ -17,23 +17,21 @@ import shutil
 import tempfile
 import unittest
 
+import Products
 from App.config import getConfiguration, setConfiguration
 from OFS.Application import Application, AppInitializer
 from Zope2.Startup.options import ZopeWSGIOptions
 
-good_cfg = """
-instancehome <<INSTANCE_HOME>>
+test_cfg = """
+instancehome {instance_home}
 
 <zodb_db main>
-   mount-point /
-   <mappingstorage>
-      name mappingstorage
-   </mappingstorage>
+    mount-point /
+    <mappingstorage>
+        name mappingstorage
+    </mappingstorage>
 </zodb_db>
 """
-
-original_config = None
-
 
 def getApp():
     from App.ZApplication import ZApplicationWrapper
@@ -42,42 +40,41 @@ def getApp():
 
 
 class TestInitialization(unittest.TestCase):
-    """ Test the application initialization """
+    """Test the application initialization"""
 
     def setUp(self):
-        global original_config
-        if original_config is None:
-            original_config = getConfiguration()
-        self.TEMPNAME = tempfile.mkdtemp()
+        self.original_config = getConfiguration()
+        self.TEMPDIR = tempfile.mkdtemp()
 
     def tearDown(self):
-        import App.config
-        App.config.setConfiguration(original_config)
-        shutil.rmtree(self.TEMPNAME)
-        import Products
-        Products.__path__ = [d for d in Products.__path__
+        setConfiguration(self.original_config)
+        shutil.rmtree(self.TEMPDIR)
+        Products.__path__ = [d
+                             for d in Products.__path__
                              if os.path.exists(d)]
 
-    def configure(self, text):
+    def configure(self, config):
         # We have to create a directory of our own since the existence
         # of the directory is checked.  This handles this in a
         # platform-independent way.
-        config_path = os.path.join(self.TEMPNAME, 'zope.conf')
+        config_path = os.path.join(self.TEMPDIR, 'zope.conf')
         with open(config_path, 'w') as fd:
-            fd.write(text.replace(u"<<INSTANCE_HOME>>", self.TEMPNAME))
+            fd.write(config.format(instance_home=self.TEMPDIR))
 
         options = ZopeWSGIOptions(config_path)()
         config = options.configroot
-        self.assertEqual(config.instancehome, self.TEMPNAME)
+        self.assertEqual(config.instancehome, self.TEMPDIR)
         setConfiguration(config)
 
-    def getOne(self):
+    def getInitializer(self):
         app = getApp()
         return AppInitializer(app)
 
     def test_install_session_data_manager(self):
-        self.configure(good_cfg)
-        i = self.getOne()
-        i.install_products()
-        app = i.getApp()
+        from Products.SiteErrorLog.SiteErrorLog import SiteErrorLog
+        self.configure(test_cfg)
+        initializer = self.getInitializer()
+        app = initializer.getApp()
+        initializer.install_products()
+        self.assertIsInstance(app.error_log, SiteErrorLog)
         self.assertEqual(app.error_log.meta_type, 'Site Error Log')
