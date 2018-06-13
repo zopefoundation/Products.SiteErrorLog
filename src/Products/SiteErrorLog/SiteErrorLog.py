@@ -87,6 +87,7 @@ class SiteErrorLog(SimpleItem):
     """
     meta_type = 'Site Error Log'
     id = 'error_log'
+    zmi_icon = 'far fa-bug'
 
     keep_entries = 20
     copy_to_zlog = True
