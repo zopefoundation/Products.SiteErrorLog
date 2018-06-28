@@ -4,6 +4,7 @@
 
 
 <main class="container-fluid">
+
 	<h3>Exception traceback</h3>
 
 	<a class="btn btn-primary mt-4 mb-4" href="manage_main">
@@ -14,9 +15,8 @@
 	<div tal:define="entry python:container.getLogEntryById(request.get('id'))">
 
 		<div class="alert alert-info" tal:condition="not:entry">
-			The specified log entry was not found.  It may have expired.
+			The specified log entry was not found. It may have expired.
 		</div>
-
 
 		<div tal:condition="entry">
 
