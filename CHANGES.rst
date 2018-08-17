@@ -15,6 +15,9 @@ Changelog
 - Bring back Application initialization (creation of `SiteErrorLog` in the
   ZODB on first startup).
 
+- Style forms for Bootstrap ZMI.
+  (`#12 <https://github.com/zopefoundation/Products.SiteErrorLog/pull/12>`)
+
 
 4.0 (2016-07-22)
 ----------------
