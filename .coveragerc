@@ -1,6 +1,6 @@
 [run]
 branch = True
-source = src
+source = Products.SiteErrorLog
 
 [report]
 precision = 2
