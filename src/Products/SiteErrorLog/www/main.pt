@@ -34,7 +34,7 @@
 		<div class="form-group row">
 			<label for="id" class="form-label col-sm-5 col-md-4">Ignored exception types</label>
 			<div class=" col-sm-7 col-md-8">
-				<textarea name="ignored_exceptions:lines" class="form-control" rows="3"
+				<textarea name="ignored_exceptions:ulines" class="form-control" rows="3"
 					tal:content="python: '\n'.join(props['ignored_exceptions'])"></textarea>
 			</div>
 		</div>
