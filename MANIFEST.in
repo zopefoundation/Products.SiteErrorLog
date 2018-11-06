@@ -1,7 +1,9 @@
 include *.rst
 include *.txt
+include .coveragerc
+include tox.ini
 
-recursive-include src *
+exclude MANIFEST.in
 
-global-exclude *.pyc
-global-exclude *.pyo
+recursive-include src *.pt
+recursive-include src *.zcml
