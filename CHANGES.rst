@@ -6,7 +6,7 @@ Changelog
 
 - Drop support for Zope 2, require Zope >= 4.0b6 now.
 
-- Add support for Python 3.5 and 3.6.
+- Add support for Python 3.5, 3.6 and 3.7.
 
 - Drop `ZServer` dependency.
 
