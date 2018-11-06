@@ -30,7 +30,7 @@ INSTALL_REQUIRES = [
 
 setup(
     name='Products.SiteErrorLog',
-    version='5.0.dev0',
+    version='5.0',
     url='https://github.com/zopefoundation/Products.SiteErrorLog',
     license='ZPL 2.1',
     description="Error log for Zope.",

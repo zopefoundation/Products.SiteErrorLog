@@ -1,7 +1,7 @@
 Changelog
 =========
 
-5.0 (unreleased)
+5.0 (2018-11-06)
 ----------------
 
 - Drop support for Zope 2, require Zope >= 4.0b6 now.
