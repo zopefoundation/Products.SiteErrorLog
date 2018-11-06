@@ -16,7 +16,7 @@ Changelog
   ZODB on first startup).
 
 - Style forms for Bootstrap ZMI.
-  (`#12 <https://github.com/zopefoundation/Products.SiteErrorLog/pull/12>`)
+  (`#12 <https://github.com/zopefoundation/Products.SiteErrorLog/pull/12>`_)
 
 
 4.0 (2016-07-22)
