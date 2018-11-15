@@ -21,27 +21,27 @@
 		<div tal:condition="entry">
 
 			<table class="table table-sm zmi-errorlog-entry">
-				<tr>
+				<tr class="time">
 					<th align="left" valign="top">Time</th>
 					<td tal:content="python: modules['DateTime'].DateTime(entry['time'])"></td>
 				</tr>
-				<tr>
+				<tr class="username">
 					<th align="left" valign="top">User Name (User Id)</th>
 					<td tal:content="string: ${entry/username} (${entry/userid})">joe (joe)</td>
 				</tr>
-				<tr>
+				<tr class="url">
 					<th align="left" valign="top">Request URL</th>
 					<td tal:content="entry/url">http://example.com</td>
 				</tr>
-				<tr>
+				<tr class="type">
 					<th align="left" valign="top">Exception Type</th>
 					<td tal:content="entry/type">AttributeError</td>
 				</tr>
-				<tr>
+				<tr class="value">
 					<th align="left" valign="top">Exception Value</th>
 					<td tal:content="entry/value">zzope</td>
 				</tr>
-			</table>
+			</table
 
 			<div class="code zmi-traceback" tal:condition="entry/tb_html"
 				tal:content="structure entry/tb_html">
