@@ -41,7 +41,7 @@
 					<th align="left" valign="top">Exception Value</th>
 					<td tal:content="entry/value">zzope</td>
 				</tr>
-			</table
+			</table>
 
 			<div class="code zmi-traceback" tal:condition="entry/tb_html"
 				tal:content="structure entry/tb_html">
