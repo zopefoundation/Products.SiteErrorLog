@@ -181,6 +181,7 @@ class SiteErrorLogTests(unittest.TestCase):
 import Testing.testbrowser
 import Testing.ZopeTestCase
 import Zope2.App
+import codecs
 
 from ..SiteErrorLog import manage_addErrorLog
 
@@ -200,7 +201,13 @@ class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
         self.error_log = self.app.error_log
         
         self.browser = Testing.testbrowser.Browser()
-        self.browser.login('manager', 'manager_pass')
+        # Change back once https://github.com/zopefoundation/Zope/commit/4a6338876f15fb01f49c5b07f54e0bda39bab009 is released
+        # self.browser.login('manager', 'manager_pass')
+        self.browser.addHeader(
+             'Authorization',
+             'basic {}'.format(codecs.encode(
+                 b'manager:manager_pass', 'base64').decode()))
+        
         self.browser.open('http://localhost/error_log/manage_main')
     
     def testSubmitRetainsIgnoredExceptionsUnchanged(self):
