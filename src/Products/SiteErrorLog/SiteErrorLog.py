@@ -255,7 +255,8 @@ class SiteErrorLog(SimpleItem):
         return {
             'keep_entries': self.keep_entries,
             'copy_to_zlog': self.copy_to_zlog,
-            'ignored_exceptions': self._ignored_exceptions}
+            'ignored_exceptions': self._ignored_exceptions
+        }
 
     security.declareProtected(log_to_event_log, 'checkEventLogPermission')
 
@@ -277,6 +278,8 @@ class SiteErrorLog(SimpleItem):
             self.checkEventLogPermission()
         self.keep_entries = int(keep_entries)
         self.copy_to_zlog = copy_to_zlog
+        # filter out empty lines
+        # ensure we don't save exception objects but exceptions instead
         self._ignored_exceptions = tuple(
             [_f for _f in map(str, ignored_exceptions) if _f])
         if RESPONSE is not None:
