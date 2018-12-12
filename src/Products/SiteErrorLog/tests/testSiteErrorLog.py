@@ -194,7 +194,9 @@ class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
         uf = self.app.acl_users
         uf.userFolderAddUser('manager', 'manager_pass', ['Manager'], [])
         
-        manage_addErrorLog(self.app)
+        # Why is this neccessary, shouldn't the test get a new app every time?
+        if not hasattr(self.app, 'error_log'):
+            manage_addErrorLog(self.app)
         self.error_log = self.app.error_log
         
         self.browser = Testing.testbrowser.Browser()
