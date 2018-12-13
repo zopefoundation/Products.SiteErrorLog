@@ -192,7 +192,7 @@ class SiteErrorLog(SimpleItem):
             req_html = None
             try:
                 strv = str(info[1])
-            except:
+            except Exception:
                 strv = '<unprintable %s object>' % type(info[1]).__name__
             if request:
                 url = request.get('URL', '?')
@@ -201,7 +201,7 @@ class SiteErrorLog(SimpleItem):
                 userid = usr.getId()
                 try:
                     req_html = str(request)
-                except:
+                except Exception:
                     pass
                 if strtype == 'NotFound':
                     strv = url
@@ -231,7 +231,7 @@ class SiteErrorLog(SimpleItem):
                     del log[:-self.keep_entries]
             finally:
                 cleanup_lock.release()
-        except:
+        except Exception:
             LOG.error('Error while logging', exc_info=sys.exc_info())
         else:
             notify(ErrorRaisedEvent(log[-1]))
@@ -322,6 +322,7 @@ class SiteErrorLog(SimpleItem):
             RESPONSE.setHeader('Content-Type', 'text/plain')
         return entry['tb_text']
 
+
 InitializeClass(SiteErrorLog)
 
 
@@ -331,8 +332,9 @@ def manage_addErrorLog(dispatcher, RESPONSE=None):
     dispatcher._setObject(log.id, log)
     if RESPONSE is not None:
         RESPONSE.redirect(
-            dispatcher.DestinationURL() +
-            '/manage_main?manage_tabs_message=Error+Log+Added.')
+            dispatcher.DestinationURL()
+            + '/manage_main?manage_tabs_message=Error+Log+Added.')
+
 
 @adapter(IPubFailure)
 def IPubFailureSubscriber(event):

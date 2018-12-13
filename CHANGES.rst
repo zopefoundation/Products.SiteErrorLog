@@ -4,7 +4,7 @@ Changelog
 5.1 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Flake8 the code.
 
 
 5.0 (2018-11-06)

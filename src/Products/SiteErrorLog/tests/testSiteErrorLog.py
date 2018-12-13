@@ -44,7 +44,7 @@ class SiteErrorLogTests(unittest.TestCase):
             self.logger.addHandler(self.log)
             self.old_level = self.logger.level
             self.logger.setLevel(logging.ERROR)
-        except:
+        except Exception:
             self.tearDown()
 
     def tearDown(self):
@@ -84,7 +84,6 @@ class SiteErrorLogTests(unittest.TestCase):
         self.assertEqual(len(sel_ob.getLogEntries()), previous_log_length + 1)
 
     def testEventSubscription(self):
-        sel_ob = self.app.error_log
         # Fill the DTML method at self.root.doc with bogus code
         dmeth = self.app.doc
         dmeth.manage_upload(file="""<dtml-var expr="1/0">""")
