@@ -28,6 +28,11 @@ INSTALL_REQUIRES = [
 ]
 
 
+def read(name):
+    with open(name) as f:
+        return f.read()
+
+
 setup(
     name='Products.SiteErrorLog',
     version='5.1.dev0',
@@ -36,8 +41,8 @@ setup(
     description="Error log for Zope.",
     author='Zope Foundation and Contributors',
     author_email='zope-dev@zope.org',
-    long_description=(open('README.rst').read() + '\n' +
-                      open('CHANGES.rst').read()),
+    long_description='\n'.join([read('README.rst'),
+                                read('CHANGES.rst')]),
     classifiers=[
         "Development Status :: 5 - Production/Stable",
         "Intended Audience :: Developers",
