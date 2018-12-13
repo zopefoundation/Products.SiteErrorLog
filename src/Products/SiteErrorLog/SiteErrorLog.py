@@ -335,7 +335,6 @@ def manage_addErrorLog(dispatcher, RESPONSE=None):
             dispatcher.DestinationURL()
             + '/manage_main?manage_tabs_message=Error+Log+Added.')
 
-
 @adapter(IPubFailure)
 def IPubFailureSubscriber(event):
     """ Handles an IPubFailure event triggered by the WSGI Publisher.
