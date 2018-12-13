@@ -33,6 +33,7 @@ instancehome {instance_home}
 </zodb_db>
 """
 
+
 def getApp():
     from App.ZApplication import ZApplicationWrapper
     DB = getConfiguration().dbtab.getDatabase('/')

@@ -14,10 +14,12 @@
 
 from . import SiteErrorLog
 
+
 def commit(note):
     import transaction
     transaction.get().note(note)
     transaction.commit()
+
 
 def install_errorlog(app):
     if hasattr(app, 'error_log'):
@@ -33,6 +35,6 @@ def initialize(context):
                           constructors=(SiteErrorLog.manage_addErrorLog,),
                           permission=SiteErrorLog.use_error_logging)
 
-    app = context.getApplication() # new API added in Zope 4.0b5
+    app = context.getApplication()  # new API added in Zope 4.0b5
     if app is not None:
         install_errorlog(app)
