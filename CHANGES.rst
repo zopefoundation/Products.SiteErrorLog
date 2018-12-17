@@ -6,6 +6,7 @@ Changelog
 
 - Flake8 the code.
 
+- Fix #13, Py3: ignored exception types gets converted to bytes and back accidentally
 
 5.0 (2018-11-06)
 ----------------
