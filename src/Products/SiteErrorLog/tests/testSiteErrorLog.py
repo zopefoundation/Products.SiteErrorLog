@@ -216,5 +216,5 @@ class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
         self.assertEqual(ignoredExceptions.value, 'Unauthorized\nNotFound\nRedirect') # default value
         self.browser.getControl('Save Changes').click()
         ignoredExceptions = self.browser.getControl(label='Ignored exception types')
-        self.assertEquals(ignoredExceptions.value, 'Unauthorized\nNotFound\nRedirect')
+        self.assertEqual(ignoredExceptions.value, 'Unauthorized\nNotFound\nRedirect')
     
