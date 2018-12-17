@@ -12,16 +12,22 @@
 #
 ##############################################################################
 
+import codecs
 import logging
 import sys
 import unittest
 
 import transaction
 from Testing.makerequest import makerequest
+import Testing.testbrowser
+import Testing.ZopeTestCase
 from zope.component import adapter, provideHandler
 from zope.event import notify
 from ZPublisher.pubevents import PubFailure
 import Zope2
+import Zope2.App
+
+from ..SiteErrorLog import manage_addErrorLog
 
 from Products.SiteErrorLog.interfaces import IErrorRaisedEvent
 
@@ -177,13 +183,6 @@ class SiteErrorLogTests(unittest.TestCase):
         # Need to make sure that the __error_log__ hook gets cleaned up
         self.app._delObject('error_log')
         self.assertEqual(getattr(self.app, '__error_log__', None), None)
-
-import Testing.testbrowser
-import Testing.ZopeTestCase
-import Zope2.App
-import codecs
-
-from ..SiteErrorLog import manage_addErrorLog
 
 class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
     
