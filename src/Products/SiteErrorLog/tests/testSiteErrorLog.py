@@ -12,7 +12,6 @@
 #
 ##############################################################################
 
-import codecs
 import logging
 import sys
 import unittest
@@ -184,25 +183,26 @@ class SiteErrorLogTests(unittest.TestCase):
         self.app._delObject('error_log')
         self.assertEqual(getattr(self.app, '__error_log__', None), None)
 
+
 class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
-    
+
     def setUp(self):
         super(SiteErrorLogUITests, self).setUp()
-        
+
         Zope2.App.zcml.load_site(force=True)
 
         uf = self.app.acl_users
         uf.userFolderAddUser('manager', 'manager_pass', ['Manager'], [])
-        
+
         # Why is this neccessary, shouldn't the test get a new app every time?
         if not hasattr(self.app, 'error_log'):
             manage_addErrorLog(self.app)
         self.error_log = self.app.error_log
-        
+
         self.browser = Testing.testbrowser.Browser()
         self.browser.login('manager', 'manager_pass')
         self.browser.open('http://localhost/error_log/manage_main')
-    
+
     def testSubmitRetainsIgnoredExceptionsUnchanged(self):
         # Checks the fix for https://github.com/zopefoundation/Products.SiteErrorLog/issues/13
         ignoredExceptions = self.browser.getControl(label='Ignored exception types')
@@ -213,4 +213,4 @@ class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
         self.assertIn('Changed properties', self.browser.contents)
         ignoredExceptions = self.browser.getControl(label='Ignored exception types')
         self.assertEqual(ignoredExceptions.value, 'Unauthorized\nFnord')
-    
+
