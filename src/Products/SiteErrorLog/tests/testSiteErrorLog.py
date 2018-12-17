@@ -209,13 +209,13 @@ class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
         # Checks the fix for https://github.com/zopefoundation/Products.SiteErr
         # orLog/issues/13
         ignoredExceptions = self.browser.getControl(label='Ignored exc'
-        'eption types')
+                                                    'eption types')
         self.assertEqual(ignoredExceptions.value, 'Unauthoriz'
-        'ed\nNotFound\nRedirect')  # default value
+                         'ed\nNotFound\nRedirect')  # default value
         ignoredExceptions.value = 'Unauthorized\nFnord'
         self.assertNotIn('Changed properties', self.browser.contents)
         self.browser.getControl('Save Changes').click()
         self.assertIn('Changed properties', self.browser.contents)
         ignoredExceptions = self.browser.getControl(label='Ignored excep'
-        'tion types')
+                                                    'tion types')
         self.assertEqual(ignoredExceptions.value, 'Unauthorized\nFnord')
