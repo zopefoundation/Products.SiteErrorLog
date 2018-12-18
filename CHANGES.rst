@@ -1,7 +1,7 @@
 Changelog
 =========
 
-5.1 (unreleased)
+5.1 (2018-12-18)
 ----------------
 
 - Flake8 the code.

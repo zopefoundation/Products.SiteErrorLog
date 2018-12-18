@@ -35,7 +35,7 @@ def read(name):
 
 setup(
     name='Products.SiteErrorLog',
-    version='5.1.dev0',
+    version='5.1',
     url='https://github.com/zopefoundation/Products.SiteErrorLog',
     license='ZPL 2.1',
     description="Error log for Zope.",
