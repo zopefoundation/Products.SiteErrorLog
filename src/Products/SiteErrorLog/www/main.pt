@@ -13,17 +13,23 @@
 		tal:define="props container/getProperties">
 
 		<div class="form-group row">
-			<label for="id" class="form-label col-sm-5 col-md-4">Number of exceptions to keep</label>
+			<label for="keep_entries" class="form-label col-sm-5 col-md-4">Number of exceptions to keep</label>
 			<div class=" col-sm-7 col-md-8">
-				<input type="text" class="form-control" name="keep_entries" 
+				<input
+					type="text"
+					id="keep_entries"
+					class="form-control"
+					name="keep_entries" 
 					tal:attributes="value props/keep_entries" />
 			</div>
 		</div>
 
 		<div class="form-group row">
-			<label for="id" class="form-label col-sm-5 col-md-4">Copy exceptions to the event log</label>
+			<label for="copy_to_zlog" class="form-label col-sm-5 col-md-4">Copy exceptions to the event log</label>
 			<div class=" col-sm-7 col-md-8">
-				<input type="checkbox"
+				<input 
+					type="checkbox"
+					id="copy_to_zlog"
 					class="checkbox-list-item" 
 					name="copy_to_zlog"
 					tal:attributes="checked props/copy_to_zlog;
@@ -32,10 +38,15 @@
 		</div>
 
 		<div class="form-group row">
-			<label for="id" class="form-label col-sm-5 col-md-4">Ignored exception types</label>
+			<label for="ignored_exceptions" class="form-label col-sm-5 col-md-4">Ignored exception types</label>
 			<div class=" col-sm-7 col-md-8">
-				<textarea name="ignored_exceptions:lines" class="form-control" rows="3"
-					tal:content="python: '\n'.join(props['ignored_exceptions'])"></textarea>
+				<textarea
+					id="ignored_exceptions"
+					class="form-control"
+					name="ignored_exceptions:ulines"
+					rows="3"
+					tal:content="python: '\n'.join(props['ignored_exceptions'])"
+				></textarea>
 			</div>
 		</div>
 

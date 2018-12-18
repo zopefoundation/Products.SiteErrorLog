@@ -6,6 +6,9 @@ Changelog
 
 - Flake8 the code.
 
+- Ignored exception types no longer accidentally get converted to bytes and back
+  on Python 3.
+  (`#13 <https://github.com/zopefoundation/Products.SiteErrorLog/issues/13>`_)
 
 5.0 (2018-11-06)
 ----------------
