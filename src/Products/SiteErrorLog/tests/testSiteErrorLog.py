@@ -204,10 +204,8 @@ class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
         self.browser.open('http://localhost/error_log/manage_main')
 
     def testSubmitRetainsIgnoredExceptionsUnchanged(self):
-        # Please excuse the horrible line breaks, but some things just have
-        # to be sacrificed on the altar of flake8
-        # Checks the fix for https://github.com/zopefoundation/Products.SiteErr
-        # orLog/issues/13
+        # Checks the fix for
+        # https://github.com/zopefoundation/Products.SiteErrorLog/issues/13
         ignoredExceptions = self.browser.getControl(
             label='Ignored exception types')
         self.assertEqual(
