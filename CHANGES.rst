@@ -1,6 +1,12 @@
 Changelog
 =========
 
+5.2 (unreleased)
+----------------
+
+- Nothing changed yet.
+
+
 5.1 (2018-12-18)
 ----------------
 
