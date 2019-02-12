@@ -4,7 +4,8 @@ Changelog
 5.2 (unreleased)
 ----------------
 
-- Nothing changed yet.
+- Ability to report traversal problems
+  (`#17 <https://github.com/zopefoundation/Products.SiteErrorLog/issues/17>`_)
 
 
 5.1 (2018-12-18)

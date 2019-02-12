@@ -346,7 +346,13 @@ def IPubFailureSubscriber(event):
         closest to the published object that the error occured with,
         it logs no error if no published object was found.
     """
-    published = event.request.get('PUBLISHED')
+    request = event.request
+    published = request.get('PUBLISHED')
+    if not published: # likely a traversal problem
+        parents = request.get("PARENTS")
+        if parents:
+            # partially emulate successful traversal
+            published = request["PUBLISHED"] = parents.pop(0)
     if not published:
         return
 
