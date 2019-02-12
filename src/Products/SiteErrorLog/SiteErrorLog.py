@@ -348,12 +348,12 @@ def IPubFailureSubscriber(event):
     """
     request = event.request
     published = request.get('PUBLISHED')
-    if not published: # likely a traversal problem
+    if published is None: # likely a traversal problem
         parents = request.get("PARENTS")
         if parents:
             # partially emulate successful traversal
             published = request["PUBLISHED"] = parents.pop(0)
-    if not published:
+    if published is None:
         return
 
     try:
