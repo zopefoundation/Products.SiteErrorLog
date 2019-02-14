@@ -4,6 +4,8 @@ Changelog
 5.2 (unreleased)
 ----------------
 
+- Ability to report problems caused by method calls (such as "manage_delObjects").
+
 - Ability to report traversal problems
   (`#17 <https://github.com/zopefoundation/Products.SiteErrorLog/issues/17>`_)
 

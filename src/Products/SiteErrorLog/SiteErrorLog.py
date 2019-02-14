@@ -356,6 +356,7 @@ def IPubFailureSubscriber(event):
     if published is None:
         return
 
+    published = getattr(published, "__self__", published) # method --> object
     try:
         error_log = aq_acquire(published, '__error_log__', containment=1)
     except AttributeError:
