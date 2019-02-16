@@ -348,7 +348,7 @@ def IPubFailureSubscriber(event):
     """
     request = event.request
     published = request.get('PUBLISHED')
-    if published is None: # likely a traversal problem
+    if published is None:  # likely a traversal problem
         parents = request.get("PARENTS")
         if parents:
             # partially emulate successful traversal
@@ -356,7 +356,7 @@ def IPubFailureSubscriber(event):
     if published is None:
         return
 
-    published = getattr(published, "__self__", published) # method --> object
+    published = getattr(published, "__self__", published)  # method --> object
     try:
         error_log = aq_acquire(published, '__error_log__', containment=1)
     except AttributeError:
