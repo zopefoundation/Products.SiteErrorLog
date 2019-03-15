@@ -17,16 +17,19 @@ import sys
 import unittest
 
 import transaction
+from OFS.Folder import manage_addFolder, Folder
 from Testing.makerequest import makerequest
 import Testing.testbrowser
 import Testing.ZopeTestCase
 from zope.component import adapter, provideHandler
+from zope.component.globalregistry import globalSiteManager
 from zope.event import notify
 from ZPublisher.pubevents import PubFailure
+from ZPublisher.WSGIPublisher import publish, transaction_pubevents
 import Zope2
 import Zope2.App
 
-from ..SiteErrorLog import manage_addErrorLog
+from ..SiteErrorLog import manage_addErrorLog, IPubFailureSubscriber
 
 from Products.SiteErrorLog.interfaces import IErrorRaisedEvent
 
@@ -218,3 +221,108 @@ class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
         ignoredExceptions = self.browser.getControl(
             label='Ignored exception types')
         self.assertEqual(ignoredExceptions.value, 'Unauthorized\nFnord')
+
+
+class WsgiErrorlogIntegrationLayer(Testing.ZopeTestCase.layer.ZopeLite):
+    """The tests using this layer commit transactions. Therefore,
+    we avoid persistent changes there and build the complete
+    support structure in this layer.
+    """
+    @classmethod
+    def setUp(cls):
+        # Apparently, other tests have already registered the
+        #   handler below, even twice
+        #   Clean up those registrations and
+        #   make a single clean registration
+        #   remember when we must remove our registration
+        regs = [r for r in globalSiteManager.registeredHandlers()
+                if r.factory is IPubFailureSubscriber
+                ]
+        if regs:
+            globalSiteManager.unregisterHandler(IPubFailureSubscriber)
+        cls._unregister = not regs
+        globalSiteManager.registerHandler(IPubFailureSubscriber)
+        # Set up our test structure
+        #   /
+        #     sel_f1/
+        #             error_log
+        #             sel_f2/
+        #                    error_log
+        app = Testing.ZopeTestCase.app()
+        # first level folder
+        manage_addFolder(app, "sel_f1")
+        sel_f1 = app.sel_f1
+        # second level folder
+        manage_addFolder(sel_f1, "sel_f2")
+        sel_f2 = sel_f1.sel_f2
+        # put an error log in each of those folders
+        # (used in `test_correct_log_*`)
+        for f in (sel_f1, sel_f2):
+            manage_addErrorLog(f)
+            el = f.error_log
+            el._ignored_exceptions = ()  # do not ignore exceptions
+        transaction.commit()
+        # make `manage_delObjects` temporarily public
+        cls._saved_roles = Folder.manage_delObjects__roles__
+        Folder.manage_delObjects__roles__ = None  # public
+
+    @classmethod
+    def tearDown(cls):
+        Folder.manage_delObjects__roles__ = cls._saved_roles
+        if cls._unregister:
+            globalSiteManager.unregisterHandler(IPubFailureSubscriber)
+        app = Testing.ZopeTestCase.app()
+        app._delOb("sel_f1")
+        transaction.commit()
+
+
+class WsgiErrorlogIntegrationTests(Testing.ZopeTestCase.ZopeTestCase):
+    layer = WsgiErrorlogIntegrationLayer
+
+    # we override `ZopeTestCase.setUp` by purpose
+    def setUp(self):
+        app = self.app = Testing.ZopeTestCase.app()
+        self.f1 = app.sel_f1
+        self.f2 = self.f1.sel_f2
+        self.el1 = self.f1.error_log
+        self.el2 = self.f2.error_log
+
+    # overridden by purpose
+    def tearDown(self):
+        self._clear_els()
+
+    def _clear_els(self):
+        for el in (self.el1, self.el2):
+            el._getLog()[:] = []
+
+    def _get_el_nos(self):
+        return tuple(len(el._getLog()) for el in (self.el1, self.el2))
+
+    def test_correct_log_traversal_2(self):
+        self._request("sel_f1/sel_f2/missing")
+        self.assertEqual(self._get_el_nos(), (0, 1))
+
+    def test_correct_log_traversal_1(self):
+        self._request("sel_f1/missing")
+        self.assertEqual(self._get_el_nos(), (1, 0))
+
+    def test_correct_log_method_2(self):
+        self._request("sel_f1/sel_f2/manage_delObjects", dict(id="missing"))
+        self.assertEqual(self._get_el_nos(), (0, 1))
+
+    def test_correct_log_method_1(self):
+        self._request("sel_f1/manage_delObjects", dict(id="missing"))
+        self.assertEqual(self._get_el_nos(), (1, 0))
+
+    def _request(self, url, params=None):
+        app = self.app
+        request = app.REQUEST
+        request.environ["PATH_INFO"] = url
+        if params:
+            request.form.update(params)
+            request.other.update(params)
+        try:
+            with transaction_pubevents(request, request.response):
+                publish(request, (app, "Zope", False))
+        except Exception:
+            pass

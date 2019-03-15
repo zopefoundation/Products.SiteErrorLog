@@ -4,6 +4,11 @@ Changelog
 5.2 (unreleased)
 ----------------
 
+- Ability to report problems caused by method calls (such as "manage_delObjects").
+
+- Ability to report traversal problems
+  (`#17 <https://github.com/zopefoundation/Products.SiteErrorLog/issues/17>`_)
+
 - Specify supported Python versions using ``python_requires`` in setup.py
   (`Zope#481 <https://github.com/zopefoundation/Zope/issues/481>`_)
 
