@@ -1,7 +1,7 @@
 Changelog
 =========
 
-5.2 (unreleased)
+5.2 (2019-03-19)
 ----------------
 
 - Ability to report problems caused by method calls (such as
