@@ -37,6 +37,11 @@ setup(
     name='Products.SiteErrorLog',
     version='5.3.dev0',
     url='https://github.com/zopefoundation/Products.SiteErrorLog',
+    project_urls={
+        'Issue Tracker': ('https://github.com/zopefoundation/'
+                          'Products.SiteErrorLog/issues'),
+        'Sources': 'https://github.com/zopefoundation/Products.SiteErrorLog',
+    },
     license='ZPL 2.1',
     description="Error log for Zope.",
     author='Zope Foundation and Contributors',

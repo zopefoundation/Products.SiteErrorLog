@@ -4,6 +4,8 @@ Changelog
 5.3 (unreleased)
 ----------------
 
+- add badges and additional information links to package information
+
 - Make sure Zope 4 ZMI shows no add dialog
   (`#19 <https://github.com/zopefoundation/Products.SiteErrorLog/issues/19>`_)
 
