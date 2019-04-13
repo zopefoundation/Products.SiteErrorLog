@@ -16,22 +16,25 @@ import logging
 import sys
 import unittest
 
-import transaction
-from OFS.Folder import manage_addFolder, Folder
-from Testing.makerequest import makerequest
 import Testing.testbrowser
 import Testing.ZopeTestCase
-from zope.component import adapter, provideHandler
+import transaction
+import Zope2
+import Zope2.App
+from OFS.Folder import Folder
+from OFS.Folder import manage_addFolder
+from Testing.makerequest import makerequest
+from zope.component import adapter
+from zope.component import provideHandler
 from zope.component.globalregistry import globalSiteManager
 from zope.event import notify
 from ZPublisher.pubevents import PubFailure
-from ZPublisher.WSGIPublisher import publish, transaction_pubevents
-import Zope2
-import Zope2.App
+from ZPublisher.WSGIPublisher import publish
+from ZPublisher.WSGIPublisher import transaction_pubevents
 
-from ..SiteErrorLog import manage_addErrorLog, IPubFailureSubscriber
-
-from Products.SiteErrorLog.interfaces import IErrorRaisedEvent
+from ..interfaces import IErrorRaisedEvent
+from ..SiteErrorLog import IPubFailureSubscriber
+from ..SiteErrorLog import manage_addErrorLog
 
 
 class SiteErrorLogTests(unittest.TestCase):
@@ -120,7 +123,7 @@ class SiteErrorLogTests(unittest.TestCase):
 
         # Create a predictable error
         try:
-            raise AttributeError("DummyAttribute")
+            raise AttributeError('DummyAttribute')
         except AttributeError:
             self.app.REQUEST['PUBLISHED'] = elog
             notify(PubFailure(self.app.REQUEST, sys.exc_info(), False))
@@ -128,7 +131,7 @@ class SiteErrorLogTests(unittest.TestCase):
         previous_log_length = len(elog.getLogEntries())
 
         entries = elog.getLogEntries()
-        self.assertEqual(entries[0]['value'], "DummyAttribute")
+        self.assertEqual(entries[0]['value'], 'DummyAttribute')
 
         # Kick it
         elog.forgetEntry(entries[0]['id'])
@@ -170,7 +173,7 @@ class SiteErrorLogTests(unittest.TestCase):
 
         # Create a predictable error
         try:
-            raise AttributeError("DummyAttribute")
+            raise AttributeError('DummyAttribute')
         except AttributeError:
             self.app.REQUEST['PUBLISHED'] = elog
             notify(PubFailure(self.app.REQUEST, sys.exc_info(), False))
@@ -250,10 +253,10 @@ class WsgiErrorlogIntegrationLayer(Testing.ZopeTestCase.layer.ZopeLite):
         #                    error_log
         app = Testing.ZopeTestCase.app()
         # first level folder
-        manage_addFolder(app, "sel_f1")
+        manage_addFolder(app, 'sel_f1')
         sel_f1 = app.sel_f1
         # second level folder
-        manage_addFolder(sel_f1, "sel_f2")
+        manage_addFolder(sel_f1, 'sel_f2')
         sel_f2 = sel_f1.sel_f2
         # put an error log in each of those folders
         # (used in `test_correct_log_*`)
@@ -272,7 +275,7 @@ class WsgiErrorlogIntegrationLayer(Testing.ZopeTestCase.layer.ZopeLite):
         if cls._unregister:
             globalSiteManager.unregisterHandler(IPubFailureSubscriber)
         app = Testing.ZopeTestCase.app()
-        app._delOb("sel_f1")
+        app._delOb('sel_f1')
         transaction.commit()
 
 
@@ -299,30 +302,30 @@ class WsgiErrorlogIntegrationTests(Testing.ZopeTestCase.ZopeTestCase):
         return tuple(len(el._getLog()) for el in (self.el1, self.el2))
 
     def test_correct_log_traversal_2(self):
-        self._request("sel_f1/sel_f2/missing")
+        self._request('sel_f1/sel_f2/missing')
         self.assertEqual(self._get_el_nos(), (0, 1))
 
     def test_correct_log_traversal_1(self):
-        self._request("sel_f1/missing")
+        self._request('sel_f1/missing')
         self.assertEqual(self._get_el_nos(), (1, 0))
 
     def test_correct_log_method_2(self):
-        self._request("sel_f1/sel_f2/manage_delObjects", dict(id="missing"))
+        self._request('sel_f1/sel_f2/manage_delObjects', dict(id='missing'))
         self.assertEqual(self._get_el_nos(), (0, 1))
 
     def test_correct_log_method_1(self):
-        self._request("sel_f1/manage_delObjects", dict(id="missing"))
+        self._request('sel_f1/manage_delObjects', dict(id='missing'))
         self.assertEqual(self._get_el_nos(), (1, 0))
 
     def _request(self, url, params=None):
         app = self.app
         request = app.REQUEST
-        request.environ["PATH_INFO"] = url
+        request.environ['PATH_INFO'] = url
         if params:
             request.form.update(params)
             request.other.update(params)
         try:
             with transaction_pubevents(request, request.response):
-                publish(request, (app, "Zope", False))
+                publish(request, (app, 'Zope', False))
         except Exception:
             pass

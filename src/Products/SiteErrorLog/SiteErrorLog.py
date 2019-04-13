@@ -14,32 +14,36 @@
 """Site error log module.
 """
 
+import logging
 import os
 import sys
 import time
-import logging
 from random import random
+
+from AccessControl.class_init import InitializeClass
+from AccessControl.SecurityInfo import ClassSecurityInfo
+from AccessControl.SecurityManagement import getSecurityManager
+from AccessControl.unauthorized import Unauthorized
+from Acquisition import aq_acquire
+from Acquisition import aq_base
+from App.Dialogs import MessageDialog
+from OFS.SimpleItem import SimpleItem
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from zExceptions.ExceptionFormatter import format_exception
+from zope.component import adapter
+from zope.event import notify
+from ZPublisher.interfaces import IPubFailure
+
+from .interfaces import ErrorRaisedEvent
+
+
 try:
     # Python 3
     from _thread import allocate_lock
 except ImportError:
     # Python 2
     from thread import allocate_lock
-from zope.event import notify
-from zope.component import adapter
-from .interfaces import ErrorRaisedEvent
 
-from AccessControl.class_init import InitializeClass
-from AccessControl.SecurityInfo import ClassSecurityInfo
-from AccessControl.SecurityManagement import getSecurityManager
-from AccessControl.unauthorized import Unauthorized
-from Acquisition import aq_base
-from Acquisition import aq_acquire
-from App.Dialogs import MessageDialog
-from OFS.SimpleItem import SimpleItem
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
-from zExceptions.ExceptionFormatter import format_exception
-from ZPublisher.interfaces import IPubFailure
 
 LOG = logging.getLogger('Zope.SiteErrorLog')
 
@@ -99,14 +103,13 @@ class SiteErrorLog(SimpleItem):
         {'label': 'Log', 'action': 'manage_main'},
     ) + SimpleItem.manage_options
 
-    security.declareProtected(use_error_logging, 'manage_main')
+    security.declareProtected(use_error_logging, 'manage_main')  # NOQA: D001
     manage_main = PageTemplateFile('main.pt', _www)
 
-    security.declareProtected(use_error_logging, 'showEntry')
+    security.declareProtected(use_error_logging, 'showEntry')  # NOQA: D001
     showEntry = PageTemplateFile('showEntry.pt', _www)
 
-    security.declarePrivate('manage_beforeDelete')
-
+    @security.private
     def manage_beforeDelete(self, item, container):
         if item is self:
             try:
@@ -114,8 +117,7 @@ class SiteErrorLog(SimpleItem):
             except AttributeError:
                 pass
 
-    security.declarePrivate('manage_afterAdd')
-
+    @security.private
     def manage_afterAdd(self, item, container):
         if item is self:
             container.__error_log__ = aq_base(self)
@@ -138,8 +140,7 @@ class SiteErrorLog(SimpleItem):
             temp_logs[self._p_oid] = log
         return log
 
-    security.declareProtected(use_error_logging, 'forgetEntry')
-
+    @security.protected(use_error_logging)
     def forgetEntry(self, id, REQUEST=None):
         """Removes an entry from the error log."""
         log = self._getLog()
@@ -161,8 +162,7 @@ class SiteErrorLog(SimpleItem):
     # through-the-web.
     _ignored_exceptions = ('Unauthorized', 'NotFound', 'Redirect')
 
-    security.declarePrivate('raising')
-
+    @security.private
     def raising(self, info):
         """Log an exception.
 
@@ -250,25 +250,22 @@ class SiteErrorLog(SimpleItem):
             _rate_restrict_pool[strtype] = next_when
             LOG.error('%s %s\n%s' % (entry_id, url, tb_text.rstrip()))
 
-    security.declareProtected(use_error_logging, 'getProperties')
-
+    @security.protected(use_error_logging)
     def getProperties(self):
         return {
             'keep_entries': self.keep_entries,
             'copy_to_zlog': self.copy_to_zlog,
-            'ignored_exceptions': self._ignored_exceptions
+            'ignored_exceptions': self._ignored_exceptions,
         }
 
-    security.declareProtected(log_to_event_log, 'checkEventLogPermission')
-
+    @security.protected(log_to_event_log)
     def checkEventLogPermission(self):
         if not getSecurityManager().checkPermission(log_to_event_log, self):
             raise Unauthorized('You do not have the "%s" permission.' %
                                log_to_event_log)
         return 1
 
-    security.declareProtected(use_error_logging, 'setProperties')
-
+    @security.protected(use_error_logging)
     def setProperties(self, keep_entries, copy_to_zlog=0,
                       ignored_exceptions=(), RESPONSE=None):
         """Sets the properties of this site error log.
@@ -288,8 +285,7 @@ class SiteErrorLog(SimpleItem):
                 '%s/manage_main?manage_tabs_message=Changed+properties.' %
                 self.absolute_url())
 
-    security.declareProtected(use_error_logging, 'getLogEntries')
-
+    @security.protected(use_error_logging)
     def getLogEntries(self):
         """Returns the entries in the log, most recent first.
 
@@ -300,8 +296,7 @@ class SiteErrorLog(SimpleItem):
         res.reverse()
         return res
 
-    security.declareProtected(use_error_logging, 'getLogEntryById')
-
+    @security.protected(use_error_logging)
     def getLogEntryById(self, id):
         """Returns the specified log entry.
 
@@ -312,8 +307,7 @@ class SiteErrorLog(SimpleItem):
                 return entry.copy()
         return None
 
-    security.declareProtected(use_error_logging, 'getLogEntryAsText')
-
+    @security.protected(use_error_logging)
     def getLogEntryAsText(self, id, RESPONSE=None):
         """Returns the specified log entry.
 
@@ -350,14 +344,14 @@ def IPubFailureSubscriber(event):
     request = event.request
     published = request.get('PUBLISHED')
     if published is None:  # likely a traversal problem
-        parents = request.get("PARENTS")
+        parents = request.get('PARENTS')
         if parents:
             # partially emulate successful traversal
-            published = request["PUBLISHED"] = parents.pop(0)
+            published = request['PUBLISHED'] = parents.pop(0)
     if published is None:
         return
 
-    published = getattr(published, "__self__", published)  # method --> object
+    published = getattr(published, '__self__', published)  # method --> object
     try:
         error_log = aq_acquire(published, '__error_log__', containment=1)
     except AttributeError:

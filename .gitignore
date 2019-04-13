@@ -8,8 +8,8 @@ bin/
 coverage.xml
 develop-eggs/
 dist/
-htmlcov/
 include/
 lib/
 local/
+parts/
 src/Products.SiteErrorLog.egg-info/
