@@ -16,7 +16,7 @@
 Products.SiteErrorLog
 =====================
 
-The SiteErrorLog object s a valuable debugging aid. It records all exceptions
+The SiteErrorLog object is a valuable debugging aid. It records all exceptions
 happening in its container and all subfolders as your site's code executes.
 
 SiteErrorLog recorded errors are not persistent, they are stored in RAM and
