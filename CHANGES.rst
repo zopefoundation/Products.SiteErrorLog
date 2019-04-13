@@ -1,7 +1,7 @@
 Changelog
 =========
 
-5.3 (unreleased)
+5.3 (2019-04-13)
 ----------------
 
 - stricter flake8 configuration
