@@ -4,6 +4,8 @@ Changelog
 5.3 (unreleased)
 ----------------
 
+- stricter flake8 configuration
+
 - add badges and additional information links to package information
 
 - Make sure Zope 4 ZMI shows no add dialog
