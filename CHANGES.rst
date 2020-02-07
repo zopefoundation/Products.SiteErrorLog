@@ -1,7 +1,7 @@
 Changelog
 =========
 
-5.4 (unreleased)
+5.4 (2020-02-06)
 ----------------
 
 - Log transient errors that can be re-tried as INFO only
