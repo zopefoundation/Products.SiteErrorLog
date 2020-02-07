@@ -118,6 +118,53 @@ class SiteErrorLogTests(unittest.TestCase):
         self.assertEqual(event_logs[0]['type'], 'ZeroDivisionError')
         self.assertEqual(event_logs[0]['username'], 'Anonymous User')
 
+    def testConflictErrorRetry(self):
+        # If a transient error is encountered and the request can be
+        # retried, don't hand it to the error log.
+        from ZODB.POSException import ConflictError
+
+        def raise_conflict():
+            raise ConflictError('Oops')
+
+        dmeth = self.app.doc
+        dmeth.raise_conflict = raise_conflict
+        event_logs = []
+        self.app.REQUEST.set('PATH_INFO', '/doc')
+        self.app.REQUEST.retry_max_count = 1  # Allow a single retry
+        self.logger.setLevel(logging.INFO)
+
+        @adapter(IErrorRaisedEvent)
+        def notifyError(evt):
+            event_logs.append(evt)
+
+        provideHandler(notifyError)
+        # Faking the behavior of the WSGIPublisher (object acquisition,
+        # view calling and failure notification on exception).
+        try:
+            dmeth.raise_conflict()
+        except ConflictError:
+            self.app.REQUEST['PUBLISHED'] = dmeth
+            notify(PubFailure(self.app.REQUEST, sys.exc_info(), False))
+
+        self.assertEqual(len(event_logs), 0)
+        self.assertEqual(len(self.log.buffer), 1)
+        self.assertEqual(self.log.buffer[0].levelname, 'INFO')
+        self.assertEqual(
+            self.log.buffer[0].getMessage(),
+            'ConflictError at /doc: Oops. Request will be retried.')
+
+        # Second try should fail.
+        self.app.REQUEST.retry_max_count = 0
+        try:
+            dmeth.raise_conflict()
+        except ConflictError:
+            self.app.REQUEST['PUBLISHED'] = dmeth
+            notify(PubFailure(self.app.REQUEST, sys.exc_info(), False))
+
+        self.assertEqual(len(event_logs), 1)
+        self.assertEqual(event_logs[0]['type'], 'ConflictError')
+        self.assertEqual(event_logs[0]['username'], 'Anonymous User')
+
     def testForgetException(self):
         elog = self.app.error_log
 

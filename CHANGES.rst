@@ -1,6 +1,13 @@
 Changelog
 =========
 
+5.4 (unreleased)
+----------------
+
+- Log transient errors that can be re-tried as INFO only
+  (`#21 <https://github.com/zopefoundation/Products.SiteErrorLog/issues/21>`_)
+
+
 5.3 (2019-04-13)
 ----------------
 

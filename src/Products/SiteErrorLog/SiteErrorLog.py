@@ -29,6 +29,7 @@ from Acquisition import aq_base
 from App.Dialogs import MessageDialog
 from OFS.SimpleItem import SimpleItem
 from Products.PageTemplates.PageTemplateFile import PageTemplateFile
+from transaction.interfaces import TransientError
 from zExceptions.ExceptionFormatter import format_exception
 from zope.component import adapter
 from zope.event import notify
@@ -343,6 +344,7 @@ def IPubFailureSubscriber(event):
     """
     request = event.request
     published = request.get('PUBLISHED')
+
     if published is None:  # likely a traversal problem
         parents = request.get('PARENTS')
         if parents:
@@ -352,6 +354,17 @@ def IPubFailureSubscriber(event):
         return
 
     published = getattr(published, '__self__', published)  # method --> object
+
+    # Filter out transient errors like ConflictErrors that can be
+    # retried, just log a short message instead.
+    if isinstance(event.exc_info[1], TransientError) and \
+       request.supports_retry():
+        LOG.info('%s at %s: %s. Request will be retried.' % (
+                 event.exc_info[0].__name__,
+                 request.get('PATH_INFO') or '<unknown>',
+                 str(event.exc_info[1])))
+        return
+
     try:
         error_log = aq_acquire(published, '__error_log__', containment=1)
     except AttributeError:

@@ -6,10 +6,12 @@
 .tox/
 bin/
 coverage.xml
+default.profraw
 develop-eggs/
 dist/
 include/
 lib/
 local/
 parts/
+pyvenv.cfg
 src/Products.SiteErrorLog.egg-info/
