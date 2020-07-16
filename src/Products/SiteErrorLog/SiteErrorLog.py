@@ -28,12 +28,13 @@ from Acquisition import aq_acquire
 from Acquisition import aq_base
 from App.Dialogs import MessageDialog
 from OFS.SimpleItem import SimpleItem
-from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 from transaction.interfaces import TransientError
 from zExceptions.ExceptionFormatter import format_exception
 from zope.component import adapter
 from zope.event import notify
 from ZPublisher.interfaces import IPubFailure
+
+from Products.PageTemplates.PageTemplateFile import PageTemplateFile
 
 from .interfaces import ErrorRaisedEvent
 

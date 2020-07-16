@@ -4,6 +4,8 @@ Changelog
 5.5 (unreleased)
 ----------------
 
+- Update configuration for version 5 of ``isort``
+
 
 5.4 (2020-02-06)
 ----------------
