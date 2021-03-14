@@ -4,7 +4,7 @@ Changelog
 5.5 (unreleased)
 ----------------
 
-- Add suppert for Python 3.9
+- Add support for Python 3.9
 
 - Update configuration for version 5 of ``isort``
 
