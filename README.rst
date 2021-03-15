@@ -1,5 +1,5 @@
-.. image:: https://travis-ci.com/zopefoundation/Products.SiteErrorLog.svg?branch=master
-   :target: https://travis-ci.com/zopefoundation/Products.SiteErrorLog
+.. image:: https://github.com/zopefoundation/Products.SiteErrorLog/actions/workflows/tests.yml/badge.svg
+        :target: https://github.com/zopefoundation/Products.SiteErrorLog/actions/workflows/tests.yml
 
 .. image:: https://coveralls.io/repos/github/zopefoundation/Products.SiteErrorLog/badge.svg?branch=master
    :target: https://coveralls.io/github/zopefoundation/Products.SiteErrorLog?branch=master

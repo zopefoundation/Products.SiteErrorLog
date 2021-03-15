@@ -1,16 +1,12 @@
-include *.py
+# Generated from:
+# https://github.com/zopefoundation/meta/tree/master/config/zope-product
 include *.rst
 include *.txt
 include buildout.cfg
 include tox.ini
 
-include *.yml
-exclude *.yml
-
-include .gitignore
-exclude .gitignore
-
-exclude MANIFEST.in
-
 recursive-include src *.pt
+recursive-include src *.py
+recursive-include src *.txt
 recursive-include src *.zcml
+include buildout4.cfg
