@@ -75,7 +75,7 @@
 			<tbody>
 				<tr tal:repeat="entry entries">
 					<td class="zmi-time" style="white-space:nowrap">
-						<span tal:replace="python: modules['DateTime'].DateTime(entry['time']).ISO()">13:04:41</span>
+						<span tal:replace="python: modules['DateTime'].DateTime(entry['time']).ISO()"> 2022-07-01 11:59:15 </span>
 					</td>
 					<td class="zmi-username">
 						<span tal:replace="string: ${entry/username} (${entry/userid})">joe (joe)</span>
