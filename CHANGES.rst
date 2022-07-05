@@ -6,6 +6,10 @@ Changelog
 
 - Add support for Python 3.10.
 
+- Render date in addition to time in ZMI error log.
+  (`#31 <https://github.com/zopefoundation/Products.SiteErrorLog/pull/31>`_)
+
+
 5.5 (2021-03-15)
 ----------------
 
