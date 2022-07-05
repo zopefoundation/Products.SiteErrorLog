@@ -4,12 +4,6 @@ Changelog
 5.6 (unreleased)
 ----------------
 
-- Nothing changed yet.
-
-
-5.5 (2022-07-05)
-----------------
-
 - Add support for Python 3.10.
 
 - Render date in addition to time in ZMI error log.
