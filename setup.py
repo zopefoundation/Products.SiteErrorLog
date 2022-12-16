@@ -23,7 +23,7 @@ def read(name):
 
 setup(
     name='Products.SiteErrorLog',
-    version='5.7.dev0',
+    version='5.7',
     url='https://github.com/zopefoundation/Products.SiteErrorLog',
     project_urls={
         'Issue Tracker': ('https://github.com/zopefoundation/'
@@ -54,6 +54,7 @@ setup(
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
+        'Programming Language :: Python :: 3.11',
         'Programming Language :: Python :: Implementation',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
