@@ -18,6 +18,7 @@ import logging
 import os
 import sys
 import time
+from _thread import allocate_lock
 from random import random
 
 from AccessControl.class_init import InitializeClass
@@ -36,14 +37,6 @@ from zope.event import notify
 from ZPublisher.interfaces import IPubFailure
 
 from .interfaces import ErrorRaisedEvent
-
-
-try:
-    # Python 3
-    from _thread import allocate_lock
-except ImportError:
-    # Python 2
-    from thread import allocate_lock
 
 
 LOG = logging.getLogger('Zope.SiteErrorLog')
@@ -77,13 +70,6 @@ _www = os.path.join(os.path.dirname(__file__), 'www')
 temp_logs = {}  # { oid -> [ traceback string ] }
 
 cleanup_lock = allocate_lock()
-
-try:
-    # Python 2
-    bstr = basestring
-except NameError:
-    # Python 3
-    bstr = str
 
 
 class SiteErrorLog(SimpleItem):
@@ -179,7 +165,7 @@ class SiteErrorLog(SimpleItem):
             if strtype in self._ignored_exceptions:
                 return
 
-            if not isinstance(info[2], bstr):
+            if not isinstance(info[2], str):
                 tb_text = ''.join(
                     format_exception(*info, **{'as_html': 0}))
                 tb_html = ''.join(
@@ -211,7 +197,7 @@ class SiteErrorLog(SimpleItem):
                     if next:
                         next = list(next)
                         next.reverse()
-                        strv = '%s [ /%s ]' % (strv, '/'.join(next))
+                        strv = '{} [ /{} ]'.format(strv, '/'.join(next))
 
             log = self._getLog()
             entry_id = str(now) + str(random())  # Low chance of collision
@@ -240,7 +226,7 @@ class SiteErrorLog(SimpleItem):
             if self.copy_to_zlog:
                 self._do_copy_to_zlog(now, strtype, entry_id,
                                       str(url), tb_text)
-            return '%s/showEntry?id=%s' % (self.absolute_url(), entry_id)
+            return f'{self.absolute_url()}/showEntry?id={entry_id}'
 
     def _do_copy_to_zlog(self, now, strtype, entry_id, url, tb_text):
         when = _rate_restrict_pool.get(strtype, 0)
@@ -249,7 +235,7 @@ class SiteErrorLog(SimpleItem):
                             now - _rate_restrict_burst * _rate_restrict_period)
             next_when += _rate_restrict_period
             _rate_restrict_pool[strtype] = next_when
-            LOG.error('%s %s\n%s' % (entry_id, url, tb_text.rstrip()))
+            LOG.error(f'{entry_id} {url}\n{tb_text.rstrip()}')
 
     @security.protected(use_error_logging)
     def getProperties(self):
@@ -359,7 +345,7 @@ def IPubFailureSubscriber(event):
     # retried, just log a short message instead.
     if isinstance(event.exc_info[1], TransientError) and \
        request.supports_retry():
-        LOG.info('%s at %s: %s. Request will be retried.' % (
+        LOG.info('{} at {}: {}. Request will be retried.'.format(
                  event.exc_info[0].__name__,
                  request.get('PATH_INFO') or '<unknown>',
                  str(event.exc_info[1])))

@@ -240,7 +240,7 @@ class SiteErrorLogTests(unittest.TestCase):
 class SiteErrorLogUITests(Testing.ZopeTestCase.FunctionalTestCase):
 
     def setUp(self):
-        super(SiteErrorLogUITests, self).setUp()
+        super().setUp()
 
         Zope2.App.zcml.load_site(force=True)
 
