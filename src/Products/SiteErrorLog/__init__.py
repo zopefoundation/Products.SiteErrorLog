@@ -27,7 +27,7 @@ def install_errorlog(app):
 
     error_log = SiteErrorLog.SiteErrorLog()
     app._setObject('error_log', error_log)
-    commit(u'Added site error_log at /error_log')
+    commit('Added site error_log at /error_log')
 
 
 def initialize(context):
