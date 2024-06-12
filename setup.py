@@ -23,7 +23,7 @@ def read(name):
 
 setup(
     name='Products.SiteErrorLog',
-    version='6.1.dev0',
+    version='7.0.dev0',
     url='https://github.com/zopefoundation/Products.SiteErrorLog',
     project_urls={
         'Issue Tracker': ('https://github.com/zopefoundation/'
@@ -45,18 +45,18 @@ setup(
         'Operating System :: OS Independent',
         'Programming Language :: Python',
         'Programming Language :: Python :: 3',
-        'Programming Language :: Python :: 3.7',
         'Programming Language :: Python :: 3.8',
         'Programming Language :: Python :: 3.9',
         'Programming Language :: Python :: 3.10',
         'Programming Language :: Python :: 3.11',
+        'Programming Language :: Python :: 3.12',
         'Programming Language :: Python :: Implementation',
         'Programming Language :: Python :: Implementation :: CPython',
     ],
     packages=find_packages('src'),
     namespace_packages=['Products'],
     package_dir={'': 'src'},
-    python_requires='>=3.7',
+    python_requires='>=3.8',
     install_requires=[
         'setuptools',
         'AccessControl',
