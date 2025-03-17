@@ -69,7 +69,7 @@ class SiteErrorLogTests(unittest.TestCase):
         sel_ob = getattr(self.app, 'error_log', None)
 
         # Does the error log exist?
-        self.assertTrue(sel_ob is not None)
+        self.assertIsNotNone(sel_ob)
 
         # Is the __error_log__ hook in place?
         self.assertEqual(self.app.__error_log__, sel_ob)
@@ -228,8 +228,11 @@ class SiteErrorLogTests(unittest.TestCase):
         entries = elog.getLogEntries()
         entry_id = entries[0]['id']
 
-        self.assertTrue(entry_id in self.log.buffer[-1].msg,
-                        (entry_id, self.log.buffer[-1].msg))
+        self.assertIn(
+            entry_id,
+            self.log.buffer[-1].msg,
+            (entry_id, self.log.buffer[-1].msg)
+        )
 
     def testCleanup(self):
         # Need to make sure that the __error_log__ hook gets cleaned up
