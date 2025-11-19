@@ -63,4 +63,5 @@ setup(
         'zope.interface',
         'zope.event',
     ],
+    include_package_data=True,
 )
