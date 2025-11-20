@@ -4,14 +4,12 @@ Changelog
 7.0 (unreleased)
 ----------------
 
+- Switch to PEP 420 native namespace.
 
-- Add support for Python 3.13.
+- Add support for Python 3.12, 3.13 and 3.14.
 
-- Drop support for Python 3.8.
+- Drop support for Python 3.7, 3.8 and 3.9.
 
-- Add support for Python 3.12.
-
-- Drop support for Python 3.7.
 
 6.0 (2023-02-01)
 ----------------
