@@ -1,7 +1,7 @@
 Changelog
 =========
 
-7.0 (unreleased)
+7.0 (2025-11-20)
 ----------------
 
 - Switch to PEP 420 native namespace.
