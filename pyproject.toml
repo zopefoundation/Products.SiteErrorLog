@@ -1,12 +1,56 @@
-# Generated from:
-# https://github.com/zopefoundation/meta/tree/master/config/zope-product
-
+# Generated with zope.meta (https://zopemeta.readthedocs.io/) from:
+# https://github.com/zopefoundation/meta/tree/master/src/zope/meta/zope-product
 [build-system]
 requires = [
     "setuptools >= 78.1.1,< 81",
     "wheel",
 ]
 build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "Products.SiteErrorLog"
+version = "7.1.dev0"
+description = "Error log for Zope."
+license = "ZPL-2.1"
+classifiers = [
+    "Development Status :: 5 - Production/Stable",
+    "Intended Audience :: Developers",
+    "Framework :: Zope",
+    "Framework :: Zope :: 5",
+    "Operating System :: OS Independent",
+    "Programming Language :: Python",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Programming Language :: Python :: 3.14",
+    "Programming Language :: Python :: Implementation",
+    "Programming Language :: Python :: Implementation :: CPython",
+]
+dynamic = ["readme"]
+requires-python = ">=3.10"
+authors = [
+    {name = "Zope Foundation and contributors",email = "zope-dev@zope.dev"},
+]
+maintainers = [
+    {name = "Plone Foundation and contributors",email = "zope-dev@zope.dev"},
+]
+dependencies = [
+    "AccessControl",
+    "Acquisition",
+    "transaction",
+    "zExceptions",
+    "Zope >= 4.0b9.dev0",
+    "zope.component",
+    "zope.interface",
+    "zope.event",
+]
+
+[project.urls]
+Source = "https://github.com/zopefoundation/Products.SiteErrorLog"
+Issues = "https://github.com/zopefoundation/Products.SiteErrorLog/issues"
 
 [tool.coverage.run]
 branch = true
@@ -30,3 +74,7 @@ exclude_lines = [
 
 [tool.coverage.html]
 directory = "parts/htmlcov"
+
+[tool.setuptools.dynamic]
+readme = {file = ["README.rst", "CHANGES.rst"]}
+
