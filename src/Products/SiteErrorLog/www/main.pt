@@ -9,7 +9,7 @@
 		file(s).
 	</p>
 
-	<form action="setProperties" method="post" 
+	<form action="setProperties" method="post"
 		tal:define="props container/getProperties">
 
 		<div class="form-group row">
@@ -19,7 +19,7 @@
 					type="text"
 					id="keep_entries"
 					class="form-control"
-					name="keep_entries" 
+					name="keep_entries"
 					tal:attributes="value props/keep_entries" />
 			</div>
 		</div>
@@ -27,10 +27,10 @@
 		<div class="form-group row">
 			<label for="copy_to_zlog" class="form-label col-sm-5 col-md-4">Copy exceptions to the event log</label>
 			<div class=" col-sm-7 col-md-8">
-				<input 
+				<input
 					type="checkbox"
 					id="copy_to_zlog"
-					class="checkbox-list-item" 
+					class="checkbox-list-item"
 					name="copy_to_zlog"
 					tal:attributes="checked props/copy_to_zlog;
 					disabled not:container/checkEventLogPermission|nothing" />
@@ -60,9 +60,9 @@
 
 	<h3>Exception Log (most recent first)</h3>
 	<div tal:define="entries container/getLogEntries">
-	
+
 		<div class="alert alert-info" tal:condition="not:entries">No exceptions logged.</div>
-		
+
 		<table class="table table-sm zmi-errorlog-entries" style="font-size:smaller" tal:condition="entries">
 			<thead>
 				<tr>
